@@ -34,7 +34,6 @@ impl Person {
     fn to_tuple(self) -> (String, String) {
         (self.first_name, self.last_name)
     }
-}
 
 
 pub fn run() {
