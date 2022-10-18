@@ -10,7 +10,7 @@ pub fn run() {
     println!("ID: {}", ID);
 
     //Assign multiple vars at once
-    let mut (my_name, my_age) = ("Brad", 37);
+    let mut (my_name, my_age): (String, i32) = ("Brad", 37);
     println!("My name is {} and I am {}", my_name, my_age);
 
 }

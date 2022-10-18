@@ -2,6 +2,11 @@
 // use rand::Rng;
 // use::std::ops::Add;
 // use std::collections::HashMap;
+use std::fs::File;
+use std::io::BufRead;
+use std::io::Write;
+use std::io::BufReader;
+use std::io::ErrorKind;
 
 //generic function
 // fn get_sum_gen<T: Add<Output = T>>(x: T, y: T) -> T {
@@ -102,5 +107,34 @@ pub fn run() {
     //         None => println!("Batman is not a hero"),
     //     };
     // }
+
+    //error handling & files
+    //panic!()- kills the program lol
+    // let path = "lines.txt";
+    // let output = File::create(path);
+    // let mut output = match output {
+    //     Ok(file) => file,
+    //     Err(error) => panic!("error: {:?}", error)
+    // };
+    // write!(output, "just some random text ig").expect("Failed to write to the file");
+    // let input = File::open(path).unwrap();
+    // let buffered = BufReader::new(input);
+    // for line in buffered.lines() {
+    //     println!("{}", line.unwrap());
+    // }
+
+    // let output2 = File::create("rand.txt");
+    // let output2 = match output2 {
+    //     Ok(file) => file,
+    //     Err(error) => match error.kind() {
+    //         ErrorKind::NotFound => match File::create("rand.txt") {
+    //             Ok(fc) => fc,
+    //             Err(e) => panic!("cant create file"),
+    //         },
+    //         _other_error => panic!("problem opening file"),
+    //     },
+    // };
+
+
 
 }
