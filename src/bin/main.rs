@@ -1,18 +1,4 @@
-//mod print;
-//mod variables;
-//mod types;
-//mod strings;
-// mod tuples;
-// mod arrays;
-// mod vectors;
-mod conditionals;
+mod other_stuff;
 fn main() {
-    //print::run();
-    //variables::run();
-    //types::run();
-    //strings::run();
-    // tuples::run();
-    // arrays::run();
-    // vectors::run();
-    conditionals::run();
+    other_stuff::run();
 }
