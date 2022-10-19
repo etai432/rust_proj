@@ -135,6 +135,27 @@ pub fn run() {
     //     },
     // };
 
+    //iterators:
+    // let mut arr_it = [1,2,3,4];
+    // for val in arr_it.iter() { //borrowed values that cannot be changed
+    //     println!("{}", val);
+    // }
+    // let mut iter1 = arr_it.iter();
+    // println!("{:?}", iter1.next());
+
+    //closures:
+    //can access vars outside its body
+    // let var_name = |parameters| -> return_type {BODY}
+    // let can_vote = |age: i32| {age >= 18};
+    // println!("can vote: {}", can_vote(8));
+    let mut samp1 = 5;
+    let print_var = || println!("{}", samp1);
+    print_var();
+    samp1 = 10;
+    let mut change_var = || samp1 += 1;
+    change_var();
+    println!("{}", samp1);
+    
 
 
 }
