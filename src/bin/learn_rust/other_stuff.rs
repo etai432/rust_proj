@@ -7,6 +7,9 @@
 // use std::io::Write;
 // use std::io::BufReader;
 // use std::io::ErrorKind;
+// use std::thread;
+// use std::time::Duration;
+// use std::sync::{Arc, Mutex};
 
 //generic function
 // fn get_sum_gen<T: Add<Output = T>>(x: T, y: T) -> T {
@@ -148,14 +151,78 @@ pub fn run() {
     // let var_name = |parameters| -> return_type {BODY}
     // let can_vote = |age: i32| {age >= 18};
     // println!("can vote: {}", can_vote(8));
-    let mut samp1 = 5;
-    let print_var = || println!("{}", samp1);
-    print_var();
-    samp1 = 10;
-    let mut change_var = || samp1 += 1;
-    change_var();
-    println!("{}", samp1);
-    
+    // let mut samp1 = 5;
+    // let print_var = || println!("{}", samp1);
+    // print_var();
+    // samp1 = 10;
+    // let mut change_var = || samp1 += 1;
+    // change_var();
+    // println!("{}", samp1);
 
+    //smart pointers
+    //& refrence operator- borrow a value
+    //box: stores data in the heap
+    // let b_int1 = Box::new(10);
+    // println!("{}", b_int1);
+    // struct TreeNode<T> {
+    //     pub left: Option<Box<TreeNode<T>>>,
+    //     pub right: Option<Box<TreeNode<T>>>,
+    //     pub key: T,
+    // }
+    // impl<T> TreeNode<T> {
+    //     pub fn new(key: T) -> Self {
+    //         TreeNode { left: None, right: None, key: key }
+    //     }
+    //     pub fn left(mut self, node:TreeNode<T>) -> Self {
+    //         self.left = Some(Box::new(node));
+    //         self
+    //     }
+    //     pub fn right(mut self, node:TreeNode<T>) -> Self {
+    //         self.right = Some(Box::new(node));
+    //         self
+    //     }
+    // }
+
+    //concurency:
+    // let thread1 = thread::spawn(|| {
+    //     for i in 1..25 {
+    //         println!("spawned thread: {}", i);
+    //         thread::sleep(Duration::from_millis(1))
+    //     }
+    // });
+
+    // for i in 1..20 {
+    //     println!("Main thread: {}", i);
+    //     thread::sleep(Duration::from_millis(1))
+    // }
+
+    // thread1.join().unwrap();//going to make sure both threads going to complete
+
+    // pub struct Bank {
+    //     balance: f32
+    // }
+    // fn withdraw(the_bank: &Arc<Mutex<Bank>>, amt: f32) {
+    //     let mut bank_ref = the_bank.lock().unwrap();
+    //     if bank_ref.balance < amt {
+    //         println!("you dont have enough money. current balance: {}", bank_ref.balance);
+    //     } else {
+    //         bank_ref.balance -= amt;
+    //         println!("new balance: {}", bank_ref.balance);
+    //     }
+    // }
+    // fn customer(the_bank: Arc<Mutex<Bank>>) {
+    //     withdraw(&the_bank, 5.0);
+    // }
+    // let bank: Arc<Mutex<Bank>> = Arc::new(Mutex::new(Bank {balance: 100.0}));
+    // let handles = (0..25).map(|_| {
+    //     let bank_ref = bank.clone();
+    //     thread::spawn(|| {
+    //         customer(bank_ref)
+    //     })
+    // });
+    // for handle in handles {
+    //     handle.join().unwrap();
+    // }
+    // println!("Total: {}", bank.lock().unwrap().balance);
 
 }
