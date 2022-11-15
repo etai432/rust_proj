@@ -108,46 +108,46 @@ impl Damka {
                 self.kills.push((place + 18) as i8);
             }
         } else {
-            if place < 17 && place % 8 != 0 && place % 8 != 1 && board[(place - 9) as usize] == 2 && board[(place - 18) as usize] == 1 {
+            if place > 17 && place % 8 != 0 && place % 8 != 1 && board[(place - 9) as usize] == 0 && board[(place - 18) as usize] == 1 {
                 self.kills.push((place - 18) as i8);
             }
-            if place < 13 && place % 8 != 7 && place % 8 != 6 && board[(place - 7) as usize] == 2 && board[(place - 14) as usize] == 1 {
+            if place > 13 && place % 8 != 7 && place % 8 != 6 && board[(place - 7) as usize] == 0 && board[(place - 14) as usize] == 1 {
                 self.kills.push((place - 14) as i8);
             }
         }
     }
 
-    fn gen_more_kills(&mut self, place:i32, kill_list:&Vec<i8>, board:&mut Vec<i8>) -> Vec<i8> {
-        let mut doubles:Vec<i8> = Vec::new();
-        let mut extra: Vec<i8> = Vec::new();
+    fn gen_more_kills(&mut self, place:i32, kill_list:&Vec<i8>, board:&mut Vec<i8>) -> Vec<(i8, i8)> {
+        let mut doubles:Vec<(i8, i8)> = Vec::new();
+        let mut extra: Vec<(i8,i8)>;
         let mut player: i8;
         for i in kill_list.iter() {
             player = i8::from(board[place as usize]);
             board[*i as usize] = player;
             board[place as usize] = 1;
             board[((i + place as i8)/2) as usize] = 1;
-            if i < &50 && i % 8 != 0 && i % 8 != 1 && board[(*i + 7) as usize] == 2 && board[(*i + 14) as usize] == 1 {
+            if i < &50 && i % 8 != 0 && i % 8 != 1 && board[(*i + 7) as usize] == (player-2).abs() && board[(*i + 14) as usize] == 1 {
                 self.doubles.push((*i, i + 14));
                 extra = self.gen_more_kills(*i as i32, &vec![i + 14], board);
                 for j in extra.iter(){
                     doubles.push(*j);
                 }
             }
-            if i < &46 && i % 8 != 7 && i % 8 != 6 && board[(*i + 9) as usize] == 2 && board[(*i + 18) as usize] == 1 {
+            if i < &46 && i % 8 != 7 && i % 8 != 6 && board[(*i + 9) as usize] == (player-2).abs() && board[(*i + 18) as usize] == 1 {
                 self.doubles.push((*i, i + 18));
                 extra = self.gen_more_kills(*i as i32, &vec![i + 18], board);
                 for j in extra.iter(){
                     doubles.push(*j);
                 }
             }
-            if i < &17 && i % 8 != 0 && i % 8 != 1 && board[(*i - 9) as usize] == 2 && board[(*i - 18) as usize] == 1 {
+            if i > &17 && i % 8 != 0 && i % 8 != 1 && board[(*i - 9) as usize] == (player-2).abs() && board[(*i - 18) as usize] == 1 {
                 self.doubles.push((*i, i - 18));
                 extra = self.gen_more_kills(*i as i32, &vec![i - 18], board);
                 for j in extra.iter(){
                     doubles.push(*j);
                 }
             }
-            if i < &13 && i % 8 != 7 && i % 8 != 6 && board[(*i - 7) as usize] == 2 && board[(*i - 14) as usize] == 1 {
+            if i > &13 && i % 8 != 7 && i % 8 != 6 && board[(*i - 7) as usize] == (player-2).abs() && board[(*i - 14) as usize] == 1 {
                 self.doubles.push((*i, i - 14));
                 extra = self.gen_more_kills(*i as i32, &vec![i - 14], board);
                 for j in extra.iter(){
@@ -160,9 +160,27 @@ impl Damka {
         }
         return doubles;
     }
+
+    fn gen_all_moves(&mut self, place:i32, board:&mut Vec<i8>) {
+        self.turn = Vec::new();
+        self.gen_moves(place, board);
+        for i in self.moves.iter() {
+            self.turn.push(*i);
+        }
+        self.gen_kills(place, board);
+        for i in self.kills.iter() {
+            self.turn.push(*i);
+        }
+        self.gen_more_kills(place, &self.kills.clone(), board);
+    }
 } 
 fn main() {
     let mut damka = Damka::new();
     damka.restart_board();
+    damka.board[33] = 0;
+    damka.board[10] = 1;
     damka.print_board();
+    damka.gen_all_moves(42, &mut damka.board.clone());
+    println!("{:?}", damka.doubles);
+    println!("{:?}", damka.turn);
 }
