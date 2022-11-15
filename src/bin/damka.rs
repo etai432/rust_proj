@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, any::{type_name, Any}};
 
 struct Damka {
     board: Vec<i8>,
@@ -29,6 +29,39 @@ impl Damka {
         for i in arr.iter() {
             self.board.push(i8::from(*i));
         }
+    }
+
+    fn check_win(&self, board:&Vec<i8>) -> i32 {
+        for i in 0..8 {
+            if board[i as usize] == 2 {
+                return 2;
+            }
+            if board[(63 - i) as usize] == 0 {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    fn is_tie(&mut self, turn:i32, board:&mut Vec<i8>) -> bool {
+        self.players(turn, board);
+        if turn == 0 {
+            for i in self.players0.clone().iter() {
+                self.gen_all_moves(*i as i32, board);
+                if self.turn.len() == 0 {
+                    return true;
+                }
+            }
+        }
+        else {
+            for i in self.players2.clone().iter() {
+                self.gen_all_moves(*i as i32, board);
+                if self.turn.len() == 0 {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     fn print_board(&self) {
@@ -173,14 +206,85 @@ impl Damka {
         }
         self.gen_more_kills(place, &self.kills.clone(), board);
     }
+
+    fn move1(&self, place:i32, goal:i32, board:&mut Vec<i8>) {
+        let mut bool1 = false;
+        for i in self.turn.iter() {
+            if goal == *i as i32 {
+                bool1 = true;
+                let player = i8::from(board[place as usize]);
+                if (goal-place).abs() > 10 {
+                    board[goal as usize] = player;
+                    board[place as usize] = 1;
+                    board[((goal + place)/2) as usize] = 1;
+                } else {
+                    board[place as usize] = 1;
+                    board[goal as usize] = player;
+                }
+            }
+        }
+        if !bool1 {
+            self.move2(place, goal, -1, board);
+        }
+    }
+
+    fn move2(&self, place:i32, goal:i32, last:i32, board:&mut Vec<i8>) {
+        let mut bool1 = false;
+        for i in self.doubles.iter() {
+            if last != i.1 as i32 && i.1 as i32 == goal {
+                bool1 = true;
+                self.move2(place, i.0 as i32, i.0 as i32, board);
+                let player = board[i.0 as usize];
+                board[i.0 as usize] = 1;
+                board[((i.1 + i.0)/2) as usize] = 1;
+                board[i.1 as usize] = player;
+            }
+        }
+        if !bool1 {
+            self.move1(place, goal, board)
+        }
+    }
+
+    fn dfs(&mut self, board:& mut Vec<i8>, turn:i32) -> f32 {
+        let win = self.check_win(&board);
+        if win != 1 {
+            //add to dict
+            return (win / 2) as f32 * 0.92;
+        }
+        let mut total_score = 0.0;
+        let mut counter = 0.0;
+        if turn == 2 {
+            self.players(2, &board);
+            for player in self.players2.clone() {
+                self.gen_all_moves(player as i32, board);
+                for move3 in self.turn.iter() {
+                    self.move1(player as i32, *move3 as i32, board);
+                    //add to dict
+                    counter += 1.0;
+                }
+                for move3 in self.doubles.iter() {
+                    self.move2(player as i32, move3.1 as i32, -1, board);
+                    //add to dict
+                    counter += 1.0;
+                }
+            }
+        } else {
+
+        }
+        return total_score / counter * 0.92;
+    }
 } 
 fn main() {
     let mut damka = Damka::new();
     damka.restart_board();
-    damka.board[33] = 0;
-    damka.board[10] = 1;
-    damka.print_board();
-    damka.gen_all_moves(42, &mut damka.board.clone());
-    println!("{:?}", damka.doubles);
-    println!("{:?}", damka.turn);
+    // damka.board[33] = 0;
+    // damka.board[10] = 1;
+    // damka.print_board();
+    // damka.gen_all_moves(42, &mut damka.board.clone());
+    // println!("{:?}", damka.doubles);
+    // println!("{:?}", damka.turn);
+    // let mut board = damka.board.clone();
+    // damka.move1(42, 28, &mut board);
+    // damka.board = board;
+    // damka.print_board();
 }
