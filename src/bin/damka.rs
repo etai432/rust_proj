@@ -1,4 +1,6 @@
+#![recursion_limit = "10000"]
 use std::{collections::HashMap, any::{type_name, Any}};
+use std::thread;
 
 struct Damka {
     board: Vec<i8>,
@@ -64,12 +66,12 @@ impl Damka {
         return false;
     }
 
-    fn print_board(&self) {
+    fn print_board(&self, board:&Vec<i8>) {
         println!("the board:");
         for i in 0..64 {
-            if self.board[i] == 2 {
+            if board[i] == 2 {
                 print!("|2|");
-            } else if self.board[i] == 0 {
+            } else if board[i] == 0 {
                 print!("|0|");
             } else {
                 print!("| |");
@@ -80,10 +82,10 @@ impl Damka {
         }
     }
 
-    fn count_troops(&self) -> (i32, i32) {
+    fn count_troops(&self, board:&Vec<i8>) -> (i32, i32) {
         let mut troop0 = 0;
         let mut troop2 = 0;
-        for i in self.board.iter() {
+        for i in board.iter() {
             if i == &0 {
                 troop0 += 1;    
             }
@@ -95,17 +97,19 @@ impl Damka {
     }
 
     fn players(&mut self, turn:i32, board:&Vec<i8>) {
+        self.players0 = Vec::new();
+        self.players2 = Vec::new();
         if turn == 0 {
             for i in 0..64 {
                 if board[i] == 0 {
-                    self.players0.push(board[i]);
+                    self.players0.push(i as i8);
                 }
             }
         }
         else {
             for i in 0..64 {
-                if board[i] == 0 {
-                    self.players2.push(board[i]);
+                if board[i] == 2 {
+                    self.players2.push(i as i8);
                 }
             }
         }
@@ -246,30 +250,102 @@ impl Damka {
     }
 
     fn dfs(&mut self, board:& mut Vec<i8>, turn:i32) -> f32 {
+        self.print_board(&board);
+        println!("{}", turn);
         let win = self.check_win(&board);
-        if win != 1 {
-            //add to dict
-            return (win / 2) as f32 * 0.92;
-        }
+        let mut bool1 = false;
         let mut total_score = 0.0;
         let mut counter = 0.0;
+        let mut copy_board: Vec<i8>;
+        let mut str1:String;
+        let mut tup: (i32, i32);
+        let mut score: f32;
+        if win != 1 {
+            str1 = String::from(&(board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
+            if !self.map.contains_key(&str1) {
+                tup = self.count_troops(&board);
+                score = win as f32 / 2.0;
+                self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+            }
+            return (win / 2) as f32 * 0.92;
+        }
         if turn == 2 {
             self.players(2, &board);
             for player in self.players2.clone() {
                 self.gen_all_moves(player as i32, board);
-                for move3 in self.turn.iter() {
-                    self.move1(player as i32, *move3 as i32, board);
-                    //add to dict
+                for move3 in self.turn.clone().iter() {
                     counter += 1.0;
+                    copy_board = board.clone();
+                    self.move1(player as i32, *move3 as i32, &mut copy_board);
+                    if &copy_board != board {
+                        bool1 = true;
+                    }
+                    str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
+                    if self.map.contains_key(&str1) {
+                        return self.map.get(&str1).unwrap() * 0.92;
+                    } else {
+                        tup = self.count_troops(&copy_board);
+                        score = self.dfs(&mut copy_board.clone(), 0);
+                        self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+                    }
                 }
-                for move3 in self.doubles.iter() {
-                    self.move2(player as i32, move3.1 as i32, -1, board);
-                    //add to dict
+                for move3 in self.doubles.clone().iter() {
+                    copy_board = board.clone();
+                    self.move2(player as i32, move3.1 as i32, -1, &mut copy_board);
+                    str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
+                    if self.map.contains_key(&str1) {
+                        return self.map.get(&str1).unwrap() * 0.92;
+                    } else {
+                        tup = self.count_troops(&copy_board);
+                        score = self.dfs(&mut copy_board.clone(), 0);
+                        self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+                    }
                     counter += 1.0;
                 }
             }
         } else {
-
+            self.players(0, &board);
+            for player in self.players0.clone() {
+                self.gen_all_moves(player as i32, board);
+                for move3 in self.turn.clone().iter() {
+                    counter += 1.0;
+                    copy_board = board.clone();
+                    self.move1(player as i32, *move3 as i32, &mut copy_board);
+                    if &copy_board != board {
+                        bool1 = true;
+                    }
+                    str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
+                    if self.map.contains_key(&str1) {
+                        return self.map.get(&str1).unwrap() * 0.92;
+                    } else {
+                        tup = self.count_troops(&copy_board);
+                        score = self.dfs(&mut copy_board.clone(), 2);
+                        self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+                    }
+                }
+                for move3 in self.doubles.clone().iter() {
+                    copy_board = board.clone();
+                    self.move2(player as i32, move3.1 as i32, -1, &mut copy_board);
+                    str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
+                    if self.map.contains_key(&str1) {
+                        return self.map.get(&str1).unwrap() * 0.92;
+                    } else {
+                        tup = self.count_troops(&copy_board);
+                        score = self.dfs(&mut copy_board.clone(), 2);
+                        self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+                    }
+                    counter += 1.0;
+                }
+            }
+        }
+        if !bool1 {
+            str1 = String::from(&(board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",","").replace(" ", "")));
+                    if !self.map.contains_key(&str1) {
+                        tup = self.count_troops(&board);
+                        score = 0.5;
+                        self.map.insert(str1, score + (tup.1 - tup.0) as f32 / 10.0);
+                    }
+            return 0.46;
         }
         return total_score / counter * 0.92;
     }
@@ -277,6 +353,9 @@ impl Damka {
 fn main() {
     let mut damka = Damka::new();
     damka.restart_board();
+    damka.dfs(& mut damka.board.clone(), 2);
+    println!("done");
+    println!("{:?}", damka.map)
     // damka.board[33] = 0;
     // damka.board[10] = 1;
     // damka.print_board();

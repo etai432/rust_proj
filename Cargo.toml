@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
+stacker = "0.1"
+thread = "0.1"
