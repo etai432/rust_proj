@@ -282,7 +282,7 @@ impl Damka {
                     }
                     str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
                     if self.map.contains_key(&str1) {
-                        return self.map.get(&str1).unwrap() * 0.92;
+                        total_score += self.map.get(&str1).unwrap() * 0.92;
                     } else {
                         tup = self.count_troops(&copy_board);
                         score = self.dfs(&mut copy_board.clone(), 0);
@@ -294,7 +294,7 @@ impl Damka {
                     self.move2(player as i32, move3.1 as i32, -1, &mut copy_board);
                     str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
                     if self.map.contains_key(&str1) {
-                        return self.map.get(&str1).unwrap() * 0.92;
+                        total_score += self.map.get(&str1).unwrap() * 0.92;
                     } else {
                         tup = self.count_troops(&copy_board);
                         score = self.dfs(&mut copy_board.clone(), 0);
@@ -316,7 +316,7 @@ impl Damka {
                     }
                     str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
                     if self.map.contains_key(&str1) {
-                        return self.map.get(&str1).unwrap() * 0.92;
+                        total_score += self.map.get(&str1).unwrap() * 0.92;
                     } else {
                         tup = self.count_troops(&copy_board);
                         score = self.dfs(&mut copy_board.clone(), 2);
@@ -328,7 +328,7 @@ impl Damka {
                     self.move2(player as i32, move3.1 as i32, -1, &mut copy_board);
                     str1 = String::from(&(copy_board.clone().into_iter().map(|i| i.to_string()).collect::<String>().replace("3", "").replace(",", "").replace(" ", "")));
                     if self.map.contains_key(&str1) {
-                        return self.map.get(&str1).unwrap() * 0.92;
+                        total_score += self.map.get(&str1).unwrap() * 0.92;
                     } else {
                         tup = self.count_troops(&copy_board);
                         score = self.dfs(&mut copy_board.clone(), 2);
