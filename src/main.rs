@@ -1,8 +1,6 @@
 mod learning_rust;
-// use learning_rust::test;
-use learning_rust::lifetime;
+use learning_rust::concurrency;
 
 fn main() {
-    // test::run();
-    lifetime::run();
+    concurrency::run();
 }
