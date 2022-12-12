@@ -20,4 +20,4 @@ pub fn run() {
     }
 
     handle.join().unwrap(); // waits for the handle thread to finish
-}
+} // test
