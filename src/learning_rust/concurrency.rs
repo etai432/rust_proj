@@ -1,3 +1,23 @@
+use std::thread;
+use std::time::Duration;
+
 pub fn run() {
-    println!("test");
+    let v = vec![1, 2, 3];
+
+    let handle = thread::spawn(move || {
+        for i in 1..10 {
+            println!("spawned: {}", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+        println!("vector: {:?}", v)
+    });
+
+    //cannot use v after it was moved
+
+    for i in 1..5 {
+        println!("main: {}", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+
+    handle.join().unwrap(); // waits for the handle thread to finish
 }
