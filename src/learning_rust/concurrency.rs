@@ -31,7 +31,7 @@ pub fn run() {
             thread::sleep(Duration::from_secs(1));
         }
     });
-
+    
     thread::spawn(move || {
         let vals = vec!["hi1", "hello1", "test1"];
         for val in vals {
