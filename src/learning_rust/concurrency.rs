@@ -1,6 +1,5 @@
-use std::cmp::Reverse;
 use std::thread;
-// use std::time::Duration;
+use std::time::Duration;
 use std::sync::mpsc;
 
 pub fn run() {
@@ -24,11 +23,24 @@ pub fn run() {
     // handle.join().unwrap(); // waits for the handle thread to finish
 
     let (tx, rx) = mpsc::channel();
+    let tx2 = tx.clone();
     thread::spawn(move || {
-        let msg = String::from("hi");
-        tx.send(msg).unwrap();
+        let vals = vec!["hi", "hello", "test"];
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec!["hi1", "hello1", "test1"];
+        for val in vals {
+            tx2.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
     }); 
 
-    let received = rx.recv().unwrap();
-    println!("msg: {}", received)
+    for received in rx {
+        println!("msg: {}", received)
+    }
 }
