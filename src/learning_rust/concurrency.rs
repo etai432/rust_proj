@@ -38,8 +38,8 @@ pub fn run() {
             tx2.send(val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
-    }); 
-
+    });
+    
     for received in rx {
         println!("msg: {}", received)
     }
