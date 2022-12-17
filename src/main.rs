@@ -1,9 +1,6 @@
-mod learning_rust;
-use learning_rust::patterns;
-// use learning_rust::concurrency;
-// use learning_rust::leetcode;
-use learning_rust::unsafe_rust;
+mod game_of_life;
+use game_of_life::game;
 
 fn main() {
-    unsafe_rust::run();
+    game::run();
 }
