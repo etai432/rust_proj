@@ -1,6 +1,8 @@
-mod game_of_life;
-use game_of_life::game;
+// mod game_of_life;
+// use game_of_life::game;
+mod chess;
+use chess::chess_main;
 
 fn main() {
-    game::run();
+    chess_main::run();
 }
