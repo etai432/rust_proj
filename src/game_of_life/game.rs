@@ -4,7 +4,7 @@ use macroquad::prelude::*;
 
 const WIDTH:Option<i32> = Some(800);
 const HEIGHT:Option<i32> = Some(600);
-const DENSITY: f32 = 0.05;
+const DENSITY: f32 = 0.3;
 // const BLACK1: Color = Color {r: 0.0, g: 0.0, b: 0.0, a: 0.0};
 const GREEN1: Color = Color {r: 0.0, g: 0.8862745, b: 0.1882353, a: 1.0};
 
@@ -39,51 +39,52 @@ fn randomize(density: f32, mut image: Image) -> Image {
 }
 
 fn udpate_living_cells(mut image: Image) -> Image {
+    let im = image.clone();
     let mut live_neighbors: i32;
-    for x in 0..image.width as u32 {
-        for y in 0..image.height as u32 {
+    for x in 0..im.width as u32 {
+        for y in 0..im.height as u32 {
             live_neighbors = 0;
             if x != 0 {
-                if image.get_pixel(x - 1, y) == GREEN1 {
+                if im.get_pixel(x - 1, y) == GREEN1 {
                     live_neighbors += 1;
                 }
                 if y != 0 {
-                    if image.get_pixel(x - 1, y - 1) == GREEN1 {
+                    if im.get_pixel(x - 1, y - 1) == GREEN1 {
                         live_neighbors += 1;
                     }
                 }
-                if y != image.height as u32 - 1 {
-                    if image.get_pixel(x - 1, y + 1) == GREEN1 {
+                if y != im.height as u32 - 1 {
+                    if im.get_pixel(x - 1, y + 1) == GREEN1 {
                         live_neighbors += 1;
                     }
                 }
             }
             if y != 0 {
-                if image.get_pixel(x, y - 1) == GREEN1 {
+                if im.get_pixel(x, y - 1) == GREEN1 {
                     live_neighbors += 1;
                 }
-                if x != image.width as u32 - 1 {
+                if x != im.width as u32 - 1 {
                     if image.get_pixel(x + 1, y - 1) == GREEN1 {
                         live_neighbors += 1;
                     }
                 }
             }
-            if y != image.height as u32 - 1 {
-                if image.get_pixel(x, y + 1) == GREEN1 {
+            if y != im.height as u32 - 1 {
+                if im.get_pixel(x, y + 1) == GREEN1 {
                     live_neighbors += 1;
                 }
-                if x != image.width as u32 - 1 {
-                    if image.get_pixel(x + 1, y + 1) == GREEN1 {
+                if x != im.width as u32 - 1 {
+                    if im.get_pixel(x + 1, y + 1) == GREEN1 {
                         live_neighbors += 1;
                     }
                 }
             }
-            if x != image.width as u32 - 1 {
-                if image.get_pixel(x + 1, y) == GREEN1 {
+            if x != im.width as u32 - 1 {
+                if im.get_pixel(x + 1, y) == GREEN1 {
                     live_neighbors += 1;
                 }
             }
-            if image.get_pixel(x, y) == GREEN1 {
+            if im.get_pixel(x, y) == GREEN1 {
                 if live_neighbors != 2 && live_neighbors != 3 {
                     image.set_pixel(x, y, BLACK);
                 }
