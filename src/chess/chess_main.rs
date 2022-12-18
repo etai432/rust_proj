@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use image;
 
 fn window_conf() -> Conf {
     Conf {
@@ -13,11 +14,10 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    let image = Image::empty();
     let board = Texture2D::from_file_with_format(include_bytes!(r"/home/itay/Documents/GitHub/rust_proj/src/chess/board.png"), None);
     draw_texture(board, 0.0, 0.0, WHITE);
     loop{
-        let board = Texture2D::from_file_with_format(include_bytes!(r"/home/itay/Documents/GitHub/rust_proj/src/chess/board.png"), None);
-        draw_texture(board, 0.0, 0.0, WHITE);
         next_frame().await;
     }
 }
