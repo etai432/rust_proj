@@ -109,7 +109,7 @@ async fn main() {
     let (board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn) = restart();
     loop{
         draw_board(&board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn);
-        draw_move(gen_moves_queen(28, &board_arr, true), &board_arr);
+        draw_move(gen_moves_pawn(9, &board_arr, false, &board_arr), &board_arr);
         next_frame().await;
     }
 }

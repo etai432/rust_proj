@@ -446,21 +446,141 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
 pub fn gen_moves_knight(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
-        todo!();
+        if index / 8 >= 2 {
+            if index % 8 > 0 {
+                if board_arr[index - 17] <= 0 {
+                    moves.push(index - 17);
+                }
+            }
+            if index % 8 < 7 {
+                if board_arr[index - 15] <= 0 {
+                    moves.push(index - 15);
+                }
+            }
+        }
+        if index / 8 < 6 {
+            if index % 8 > 0 {
+                if board_arr[index + 15] <= 0 {
+                    moves.push(index + 15);
+                }
+            }
+            if index % 8 < 7 {
+                if board_arr[index + 17] <= 0 {
+                    moves.push(index + 17);
+                }
+            }
+        }
+        if index % 8 >= 2 {
+            if index / 8 > 0 {
+                if board_arr[index - 10] <= 0 {
+                    moves.push(index - 10);
+                }
+            }
+            if index / 8 < 7 {
+                if board_arr[index + 6] <= 0 {
+                    moves.push(index + 6);
+                }
+            }
+        }
+        if index % 8 < 6 {
+            if index / 8 > 0 {
+                if board_arr[index - 6] <= 0 {
+                    moves.push(index - 6);
+                }
+            }
+            if index / 8 < 7 {
+                if board_arr[index + 10] <= 0 {
+                    moves.push(index + 10);
+                }
+            }
+        }
     }
     else {
-        todo!();
+        if index / 8 >= 2 {
+            if index % 8 > 0 {
+                if board_arr[index - 17] >= 0 {
+                    moves.push(index - 17);
+                }
+            }
+            if index % 8 < 7 {
+                if board_arr[index - 15] >= 0 {
+                    moves.push(index - 15);
+                }
+            }
+        }
+        if index / 8 < 6 {
+            if index % 8 > 0 {
+                if board_arr[index + 15] >= 0 {
+                    moves.push(index + 15);
+                }
+            }
+            if index % 8 < 7 {
+                if board_arr[index + 17] >= 0 {
+                    moves.push(index + 17);
+                }
+            }
+        }
+        if index % 8 >= 2 {
+            if index / 8 > 0 {
+                if board_arr[index - 10] >= 0 {
+                    moves.push(index - 10);
+                }
+            }
+            if index / 8 < 7 {
+                if board_arr[index + 6] >= 0 {
+                    moves.push(index + 6);
+                }
+            }
+        }
+        if index % 8 < 6 {
+            if index / 8 > 0 {
+                if board_arr[index - 6] >= 0 {
+                    moves.push(index - 6);
+                }
+            }
+            if index / 8 < 7 {
+                if board_arr[index + 10] >= 0 {
+                    moves.push(index + 10);
+                }
+            }
+        }
     }
     return moves;
 }
 
-pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
+pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last_board: &Vec<i32>) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
-        todo!();
+        if board_arr[index - 8] == 0 {
+            moves.push(index - 8);
+        }
+        if board_arr[index - 7] < 0 {
+            moves.push(index - 7);
+        }
+        if board_arr[index - 9] < 0 {
+            moves.push(index - 9);
+        }
+        if index / 8 == 6 {
+            if board_arr[index - 16] == 0 {
+                moves.push(index - 16);
+            }
+        }
     }
     else {
-        todo!();
+        if board_arr[index + 8] == 0 {
+            moves.push(index + 8);
+        }
+        if board_arr[index + 7] > 0 {
+            moves.push(index + 7);
+        }
+        if board_arr[index + 9] > 0 {
+            moves.push(index + 9);
+        }
+        if index / 8 == 1 {
+            if board_arr[index + 16] == 0 {
+                moves.push(index + 16);
+            }
+        }
     }
     return moves;
 }
@@ -473,7 +593,7 @@ pub fn is_check(board_arr: &Vec<i32>, is_white: bool) -> bool {
     todo!();
 }
 
-pub fn is_legal(move1: usize, board_arr: &Vec<i32>, is_white: bool) -> bool {
+pub fn is_legal(move1: usize, board_arr: Vec<i32>, is_white: bool) -> bool {
     todo!();
 }
 
@@ -499,6 +619,7 @@ pub fn is_checkmate(board_arr: &Vec<i32>, is_white: bool) -> bool {
             }
         }
     }
+    todo!("chcek if anyone else can save the king");
     gen_moves_king(index, board_arr, is_white).is_empty()
 }
 
