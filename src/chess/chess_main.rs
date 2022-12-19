@@ -116,7 +116,7 @@ async fn main() {
 
 pub fn run() {
     main();
-    todo!("implement castling, en passant, pawns becoming queens, ");
+    todo!("implement castling, en passant, pawns becoming queens, stalemate, repetition, ");
     todo!("input function");
     todo!("player_turn function");
     todo!("2_players function");
