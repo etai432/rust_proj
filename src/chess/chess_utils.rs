@@ -1,4 +1,13 @@
 use std::cmp::min;
+use macroquad::prelude::*;
+use image::*;
+
+pub enum castling_rights {
+    FULL,
+    LEFT,
+    RIGHT,
+    NONE,
+}
 
 pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
@@ -566,6 +575,12 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
                 moves.push(index - 16);
             }
         }
+        if board_arr[index - 9] == 0 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
+            moves.push(index - 9);
+        }
+        if board_arr[index - 7] == 0 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
+            moves.push(index - 7);
+        }
     }
     else {
         if board_arr[index + 8] == 0 && !test_check{
@@ -581,6 +596,12 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             if board_arr[index + 16] == 0 && !test_check{
                 moves.push(index + 16);
             }
+        }
+        if board_arr[index + 9] == 0 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
+            moves.push(index - 9);
+        }
+        if board_arr[index + 7] == 0 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
+            moves.push(index + 7);
         }
     }
     return moves;
@@ -730,23 +751,43 @@ pub fn is_legal(move1: usize, from: usize, board_arr: Vec<i32>, is_white: bool) 
 
 pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
     let temp = board_arr[from];
+    if board_arr[from] == 6 && from.abs_diff(to) == 7 {
+        board_arr[from + 1] = 0;
+    }
+    if board_arr[from] == 6 && from.abs_diff(to) == 9 {
+        board_arr[from - 1] = 0;
+    }
+    if board_arr[from] == -6 && from.abs_diff(to) == 7 {
+        board_arr[from - 1] = 0;
+    }
+    if board_arr[from] == -6 && from.abs_diff(to) == 9 {
+        board_arr[from + 1] = 0;
+    }
     board_arr[from] = 0;
     board_arr[to] = temp;
+    if to < 8 {
+        if temp == 6 {
+            board_arr[to] = 2;
+        }
+    }
+    if to > 55 {
+        if temp == -6 {
+            board_arr[to] = -2;
+        }
+    }
     return board_arr;
 }
 
-pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
+pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
     let index = king_index(is_white, &board_arr);
-    if gen_moves_not_safe(index, &board_arr, last).is_empty() {
+    if gen_moves(index, &board_arr, last).is_empty() {
         let mut moves: Vec<usize>;
         if is_white {
             for i in 0..64 {
-                if board_arr[i] > 1 {
-                    moves = gen_moves_not_safe(i, &board_arr, last);
-                    for move1 in moves {
-                        if is_legal(move1, i, board_arr.clone(), is_white) {
-                            return false;
-                        }
+                if board_arr[i] >= 1 {
+                    moves = gen_moves(i, &board_arr, last);
+                    if moves.len() > 0 {
+                        return false;
                     }
                 }
             }
@@ -754,12 +795,10 @@ pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
         }
         else {
             for i in 0..64 {
-                if board_arr[i] < -1 {
-                    moves = gen_moves_not_safe(i, &board_arr, last);
-                    for move1 in moves {
-                        if is_legal(move1, i, board_arr.clone(), is_white) {
-                            return false;
-                        }
+                if board_arr[i] <= -1 {
+                    moves = gen_moves(i, &board_arr, last);
+                    if moves.len() > 0 {
+                        return false;
                     }
                 }
             }
@@ -767,6 +806,11 @@ pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
         }
     }
     return false;
+}
+
+pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
+    let index = king_index(is_white, &board_arr);
+    return is_check(&board_arr, is_white, last, index) && is_stalemate(board_arr, is_white, last);
 }
 
 pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
@@ -814,4 +858,151 @@ pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usi
         moves.remove(i);
     }
     return moves;
+}
+
+pub fn get_mouse_pos() -> usize {
+    let mouse_pos = mouse_position();
+    return mouse_pos.0 as usize / 100 + mouse_pos.1 as usize / 100 * 8;
+}
+
+pub fn window_conf() -> Conf {
+    Conf {
+        window_title: "chess".to_owned(),
+        window_height: 800,
+        window_width: 800,
+        window_resizable: false,
+        ..Default::default()
+    }
+}
+
+pub fn copy_image(image: &DynamicImage) -> Image {
+    let dim = image.dimensions();
+    let mut image1 = Image::gen_image_color(dim.0 as u16, dim.1 as u16, GREEN);
+    for x in 0..dim.0 {
+        for y in 0..dim.1 {
+            let pixel = image.get_pixel(x, y);
+            image1.set_pixel(x, y, Color { r: pixel.0[0] as f32 / 255.0, g: pixel.0[1] as f32 / 255.0, b: pixel.0[2] as f32 / 255.0, a: pixel.0[3] as f32 / 255.0})
+        }
+    }
+    return image1;
+}
+//board array, board, king-1, queen-2, rook-3, bishop-4, horse-5, pawn-6. negative for black
+pub fn restart() -> (Vec<i32>, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D) {
+    let board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+    // let board_arr = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let mut img1 = image::open("src/chess/board.png").unwrap();
+    img1 = img1.resize(800, 800, image::imageops::FilterType::Gaussian);
+    let board = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_king.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wking = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_queen.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wqueen = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_rook.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wrook = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_bishop.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wbishop = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_horse.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wknight = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/white_pawn.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let wpawn = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_king.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let bking = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_queen.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let bqueen = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_rook.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let brook = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_bishop.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let bbishop = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_horse.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let bknight = Texture2D::from_image(&copy_image(&img1));
+    img1 = image::open("src/chess/black_pawn.png").unwrap();
+    img1 = img1.resize(100, 100, imageops::FilterType::Gaussian);
+    let bpawn = Texture2D::from_image(&copy_image(&img1));
+    return (board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn);
+}
+
+pub fn draw_board(board_arr: &Vec<i32>, board: Texture2D, wking: Texture2D, wqueen: Texture2D, wrook: Texture2D, wbishop: Texture2D, wknight: Texture2D, wpawn: Texture2D, bking: Texture2D, bqueen: Texture2D, brook: Texture2D, bbishop: Texture2D, bknight: Texture2D, bpawn: Texture2D) {
+    draw_texture(board, 0.0, 0.0, WHITE);
+    for i in 0..board_arr.len() {
+        match board_arr[i] {
+            1 => draw_texture(wking, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            2 => draw_texture(wqueen, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            3 => draw_texture(wrook, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            4 => draw_texture(wbishop, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            5 => draw_texture(wknight, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            6 => draw_texture(wpawn, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -1 => draw_texture(bking, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -2 => draw_texture(bqueen, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -3 => draw_texture(brook, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -4 => draw_texture(bbishop, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -5 => draw_texture(bknight, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            -6 => draw_texture(bpawn, (i % 8 * 100) as f32, (i / 8 * 100) as f32, WHITE),
+            _ => (),
+        }
+    }
+}
+
+pub fn draw_move(moves: Vec<usize>, board_arr: &Vec<i32>) {
+    for i in moves {
+        if board_arr[i] == 0 {
+            draw_circle(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 20.0, Color{r: 0.4, g: 0.4, b: 0.4, a: 0.5});
+        }
+        else{
+            if board_arr[i] == -1 || board_arr[i] == 1 {
+                draw_circle_lines(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 49.0, 7.0, RED);
+            }
+            else {
+                draw_circle_lines(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 49.0, 7.0, Color{r: 0.4, g: 0.4, b: 0.4, a: 0.5});
+            }
+        }
+    }
+}
+
+pub fn player_turn(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_turn: bool, mut is_pressed: bool, mut found: bool, mut moves: Vec<usize>, mut chosen: usize) -> (Vec<i32>, Vec<i32>, bool, bool, bool, Vec<usize>, usize) {
+    if is_pressed {
+        let pos = get_mouse_pos();
+        for i in moves.clone() {
+            if pos == i {
+                last = board_arr.clone();
+                board_arr = move_piece(chosen, pos, board_arr);
+                found = true;
+                break;
+            }
+        }
+        if found {
+            found = false;
+            is_pressed = false;
+            is_white_turn = !is_white_turn;
+        }
+        else {            
+            moves = Vec::new();
+            is_pressed = false;
+            if (board_arr[pos] > 0) == is_white_turn {
+                chosen = pos;
+                moves = gen_moves(pos, &board_arr, &last);
+                draw_move(moves.clone(), &board_arr);
+                is_pressed = true;
+            }
+        }
+    }
+    else {
+        let pos = get_mouse_pos();
+        if (board_arr[pos] > 0) == is_white_turn {
+            chosen = pos;
+            moves = gen_moves(pos, &board_arr, &last);
+            is_pressed = true;
+        }
+    }
+    return (board_arr, last, is_white_turn, is_pressed, found, moves, chosen);
 }

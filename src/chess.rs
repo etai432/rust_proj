@@ -1,1 +1,2 @@
-pub mod chess_main;
+pub mod chess_pvp;
+pub mod chess_utils;
