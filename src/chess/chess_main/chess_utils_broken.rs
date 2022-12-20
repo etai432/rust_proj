@@ -548,11 +548,11 @@ pub fn gen_moves_knight(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
     return moves;
 }
 
-pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, test_check: bool) -> Vec<usize> {
+pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>) -> Vec<usize> {
     //add en passant
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
-        if board_arr[index - 8] == 0 && !test_check {
+        if board_arr[index - 8] == 0 {
             moves.push(index - 8);
         }
         if board_arr[index - 7] < 0 {
@@ -562,13 +562,13 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index - 9);
         }
         if index / 8 == 6 {
-            if board_arr[index - 16] == 0 && !test_check{
+            if board_arr[index - 16] == 0 {
                 moves.push(index - 16);
             }
         }
     }
     else {
-        if board_arr[index + 8] == 0 && !test_check{
+        if board_arr[index + 8] == 0 {
             moves.push(index + 8);
         }
         if board_arr[index + 7] > 0 {
@@ -578,7 +578,7 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index + 9);
         }
         if index / 8 == 1 {
-            if board_arr[index + 16] == 0 && !test_check{
+            if board_arr[index + 16] == 0 {
                 moves.push(index + 16);
             }
         }
@@ -587,119 +587,22 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
 }
 
 pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
-    let mut moves: Vec<usize> = Vec::new();
-    if is_white {
-        if index / 8 != 0 {
-            if board_arr[index - 8] <= 0 {
-                moves.push(index - 8);
-            }
-            if index % 8 != 0 {
-                if board_arr[index - 9] <= 0 {
-                    moves.push(index - 9);
-                }
-            }
-            if index % 8 != 7 {
-                if board_arr[index - 7] <= 0 {
-                    moves.push(index - 7);
-                }
-            }
-        }
-        if index / 8 != 7 {
-            if board_arr[index + 8] <= 0 {
-                moves.push(index + 8);
-            }
-            if index % 8 != 9 {
-                if board_arr[index + 9] <= 0 {
-                    moves.push(index + 9);
-                }
-            }
-            if index % 8 != 0 {
-                if board_arr[index + 7] <= 0 {
-                    moves.push(index + 7);
-                }
-            }
-        }
-        if index % 8 != 7 {
-            if board_arr[index + 1] <= 0 {
-                moves.push(index + 1);
-            }
-        }
-        if index % 8 != 0 {
-            if board_arr[index - 1] <= 0 {
-                moves.push(index - 1);
-            }
-        }
-    }
-    else {
-        if index / 8 != 0 {
-            if board_arr[index - 8] >= 0 {
-                moves.push(index - 8);
-            }
-            if index % 8 != 0 {
-                if board_arr[index - 9] >= 0 {
-                    moves.push(index - 9);
-                }
-            }
-            if index % 8 != 7 {
-                if board_arr[index - 7] >= 0 {
-                    moves.push(index - 7);
-                }
-            }
-        }
-        if index / 8 != 7 {
-            if board_arr[index + 8] >= 0 {
-                moves.push(index + 8);
-            }
-            if index % 8 != 9 {
-                if board_arr[index + 9] >= 0 {
-                    moves.push(index + 9);
-                }
-            }
-            if index % 8 != 0 {
-                if board_arr[index + 7] >= 0 {
-                    moves.push(index + 7);
-                }
-            }
-        }
-        if index % 8 != 7 {
-            if board_arr[index + 1] >= 0 {
-                moves.push(index + 1);
-            }
-        }
-        if index % 8 != 0 {
-            if board_arr[index - 1] >= 0 {
-                moves.push(index - 1);
-            }
-        }  
-    }
-    
-    return moves;
+    todo!();
 }
 
-pub fn king_index(is_white: bool, board_arr: &Vec<i32>) -> usize {
+pub fn is_check(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
+    let mut index = 64;
+    let mut moves = Vec::new();
     if is_white {
         for i in 0..64 {
             if board_arr[i] == 1 {
-                return i;
+                index = i;
+                break;
             }
         }
-    }
-    else {
         for i in 0..64 {
-            if board_arr[i] == -1 {
-                return i;
-            }
-        }
-    }
-    return 64;
-}
-
-pub fn is_check(board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, index: usize) -> bool {
-    let mut moves: Vec<usize>;
-    if is_white {
-        for i in 0..64 {
-            if board_arr[i] <= -1 {
-                moves = gen_moves_not_safe(i, board_arr, last);
+            if board_arr[i] < -1 {
+                moves = gen_moves(i, board_arr.clone(), last);
                 for move1 in moves {
                     if move1 == index {
                         return true;
@@ -710,8 +613,14 @@ pub fn is_check(board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, index: us
     }
     else {
         for i in 0..64 {
-            if board_arr[i] >= 1 {
-                moves = gen_moves_not_safe(i, board_arr, last);
+            if board_arr[i] == -1 {
+                index = i;
+                break;
+            }
+        }
+        for i in 0..64 {
+            if board_arr[i] > 1 {
+                moves = gen_moves(i, board_arr.clone(), last);
                 for move1 in moves {
                     if move1 == index {
                         return true;
@@ -724,25 +633,37 @@ pub fn is_check(board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, index: us
 }
 
 pub fn is_legal(move1: usize, from: usize, board_arr: Vec<i32>, is_white: bool) -> bool {
-    let board = move_piece(from, move1, board_arr.clone());
-    return !is_check(&board, is_white, &board_arr, king_index(is_white, &board));
+    return !is_check(move_piece(from, move1, board_arr.clone()), is_white, &board_arr);
 }
 
-pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
-    let temp = board_arr[from];
-    board_arr[from] = 0;
-    board_arr[to] = temp;
-    return board_arr;
+pub fn move_piece(from: usize, to: usize, board_arr: Vec<i32>) -> Vec<i32> {
+    todo!();
 }
 
 pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
-    let index = king_index(is_white, &board_arr);
-    if gen_moves_not_safe(index, &board_arr, last).is_empty() {
-        let mut moves: Vec<usize>;
+    let mut index = 64;
+    if is_white {
+        for i in 0..64 {
+            if board_arr[i] == 1 {
+                index = i;
+                break;
+            }
+        }
+    }
+    else {
+        for i in 0..64 {
+            if board_arr[i] == -1 {
+                index = i;
+                break;
+            }
+        }
+    }
+    if gen_moves_king(index, &board_arr, is_white).is_empty() {
+        let mut moves = Vec::new();
         if is_white {
             for i in 0..64 {
                 if board_arr[i] > 1 {
-                    moves = gen_moves_not_safe(i, &board_arr, last);
+                    moves = gen_moves(i, board_arr.clone(), last);
                     for move1 in moves {
                         if is_legal(move1, i, board_arr.clone(), is_white) {
                             return false;
@@ -755,7 +676,7 @@ pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
         else {
             for i in 0..64 {
                 if board_arr[i] < -1 {
-                    moves = gen_moves_not_safe(i, &board_arr, last);
+                    moves = gen_moves(i, board_arr.clone(), last);
                     for move1 in moves {
                         if is_legal(move1, i, board_arr.clone(), is_white) {
                             return false;
@@ -769,49 +690,28 @@ pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
     return false;
 }
 
-pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
-    let moves = match board_arr[index] {
-        1 => gen_moves_king(index, board_arr, true),
-        2 => gen_moves_queen(index, board_arr, true),
-        3 => gen_moves_rook(index, board_arr, true),
-        4 => gen_moves_bishop(index, board_arr, true),
-        5 => gen_moves_knight(index, board_arr, true),
-        6 => gen_moves_pawn(index, board_arr, true, last, true),
-        -1 => gen_moves_king(index, board_arr, false),
-        -2 => gen_moves_queen(index, board_arr, false),
-        -3 => gen_moves_rook(index, board_arr, false),
-        -4 => gen_moves_bishop(index, board_arr, false),
-        -5 => gen_moves_knight(index, board_arr, false),
-        -6 => gen_moves_pawn(index, board_arr, false, last, true),
+pub fn gen_moves(index: usize, board_arr: Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
+    let mut moves = match board_arr[index] {
+        1 => gen_moves_king(index, &board_arr, true),
+        2 => gen_moves_queen(index, &board_arr, true),
+        3 => gen_moves_rook(index, &board_arr, true),
+        4 => gen_moves_bishop(index, &board_arr, true),
+        5 => gen_moves_knight(index, &board_arr, true),
+        6 => gen_moves_pawn(index, &board_arr, true, last),
+        -1 => gen_moves_king(index, &board_arr, false),
+        -2 => gen_moves_queen(index, &board_arr, false),
+        -3 => gen_moves_rook(index, &board_arr, false),
+        -4 => gen_moves_bishop(index, &board_arr, false),
+        -5 => gen_moves_knight(index, &board_arr, false),
+        -6 => gen_moves_pawn(index, &board_arr, false, last),
         _ => Vec::new(),
     };
+    for i in 0..moves.len() {
+        if !is_legal(moves[i], index, board_arr.clone(), board_arr[index] > 0) {
+            moves.remove(i);
+        }
+    }
     return moves;
 }
 
-pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
-    let mut moves = match board_arr[index] {
-        1 => gen_moves_king(index, board_arr, true),
-        2 => gen_moves_queen(index, board_arr, true),
-        3 => gen_moves_rook(index, board_arr, true),
-        4 => gen_moves_bishop(index, board_arr, true),
-        5 => gen_moves_knight(index, board_arr, true),
-        6 => gen_moves_pawn(index, board_arr, true, last, false),
-        -1 => gen_moves_king(index, board_arr, false),
-        -2 => gen_moves_queen(index, board_arr, false),
-        -3 => gen_moves_rook(index, board_arr, false),
-        -4 => gen_moves_bishop(index, board_arr, false),
-        -5 => gen_moves_knight(index, board_arr, false),
-        -6 => gen_moves_pawn(index, board_arr, false, last, false),
-        _ => Vec::new(),
-    };
-    let mut remove = Vec::new();
-    for i in 0..moves.len() {
-        if !is_legal(moves[i], index, board_arr.clone(), board_arr[index] > 0) {
-            remove.push(i);
-        }
-    }
-    for i in remove.into_iter().rev() {
-        moves.remove(i);
-    }
-    return moves;
-}
+// draw_move(gen_moves(8, board_arr.clone(), &board_arr), &board_arr); //compiler crash 1.66.0 stable

@@ -27,7 +27,7 @@ fn copy_image(image: &DynamicImage) -> Image {
 }
 //board array, board, king-1, queen-2, rook-3, bishop-4, horse-5, pawn-6. negative for black
 fn restart() -> (Vec<i32>, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D) {
-    let board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+    let board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
     // let board_arr = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let mut img1 = image::open("src/chess/board.png").unwrap();
     img1 = img1.resize(800, 800, image::imageops::FilterType::Gaussian);
@@ -105,20 +105,20 @@ fn draw_move(index: Vec<usize>, board_arr: &Vec<i32>) {
 
 #[macroquad::main(window_conf)]
 async fn main() {
-    // let mut img: RgbaImage = ImageBuffer::new(800, 800);
     let (board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn) = restart();
     loop{
         draw_board(&board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn);
-        draw_move(gen_moves_pawn(9, &board_arr, false, &board_arr), &board_arr);
+        draw_move(gen_moves(28, &board_arr, &board_arr), &board_arr);
         next_frame().await;
     }
 }
 
 pub fn run() {
     main();
-    todo!("implement castling, en passant, pawns becoming queens, stalemate, repetition, ");
     todo!("input function");
     todo!("player_turn function");
+    todo!("make sure checkmate works");
+    todo!("implement castling, en passant, pawns becoming queens, stalemate, repetition, ");
     todo!("2_players function");
     todo!("evaluation function- possibly using a neural network");
     todo!("minimax");
