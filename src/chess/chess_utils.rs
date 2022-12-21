@@ -1094,5 +1094,70 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
 }
 
 pub fn is_insufficient(board_arr: &Vec<i32>) -> bool {
-    todo!()
+    let mut white = false;
+    let mut black = false;
+    let tup_white = count_pieces(board_arr, true);
+    let tup_black = count_pieces(board_arr, false);
+    if tup_white.2 == 1 || tup_white.3 ==1 {
+        white = true;
+    }
+    if tup_white.2 == 1 && tup_white.3 ==1 {
+        white = false;
+    }
+    if tup_white.0 > 0 || tup_white.1 > 0 || tup_white.4 > 0 {
+        white = false;
+    }
+    if tup_black.2 == 1 || tup_black.3 ==1 {
+        black = true;
+    }
+    if tup_black.2 == 1 && tup_black.3 ==1 {
+        black = false;
+    }
+    if tup_black.0 > 0 || tup_black.1 > 0 || tup_black.4 > 0 {
+        black = false;
+    }
+    black && white
+}
+
+pub fn count_pieces(board_arr: &Vec<i32>, is_white: bool) -> (i32, i32, i32, i32, i32) {
+    let mut tup = (0, 0, 0, 0, 0);
+    if is_white {
+        for i in board_arr{
+            if i == &2 {
+                tup.0 += 1;
+            }
+            if i == &3 {
+                tup.1 += 1;
+            }
+            if i == &4 {
+                tup.2 += 1;
+            }
+            if i == &5 {
+                tup.3 += 1;
+            }
+            if i == &6 {
+                tup.4 += 1;
+            }
+        }
+    }
+    else {
+        for i in board_arr{
+            if i == &-2 {
+                tup.0 += 1;
+            }
+            if i == &-3 {
+                tup.1 += 1;
+            }
+            if i == &-4 {
+                tup.2 += 1;
+            }
+            if i == &-5 {
+                tup.3 += 1;
+            }
+            if i == &-6 {
+                tup.4 += 1;
+            }
+        }
+    }
+    return tup;
 }
