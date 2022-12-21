@@ -2,13 +2,6 @@ use std::cmp::min;
 use macroquad::prelude::*;
 use image::*;
 
-pub enum castling_rights {
-    FULL,
-    LEFT,
-    RIGHT,
-    NONE,
-}
-
 pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
@@ -607,7 +600,7 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
     return moves;
 }
 
-pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
+pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (bool, bool, bool, bool)) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
         if index / 8 != 0 {
@@ -648,6 +641,16 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         if index % 8 != 0 {
             if board_arr[index - 1] <= 0 {
                 moves.push(index - 1);
+            }
+        }
+        if tup.0 {
+            if board_arr[59] == 0 && board_arr[58] == 0 && board_arr[57] == 0 && !is_check(board_arr, is_white, &Vec::new(), 59) {
+                moves.push(58)
+            }
+        }
+        if tup.1 {
+            if board_arr[61] == 0 && board_arr[62] == 0 && !is_check(board_arr, is_white, &Vec::new(), 61) {
+                moves.push(62)
             }
         }
     }
@@ -691,7 +694,17 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
             if board_arr[index - 1] >= 0 {
                 moves.push(index - 1);
             }
-        }  
+        } 
+        if tup.2 {
+            if board_arr[1] == 0 && board_arr[2] == 0 && board_arr[3] == 0 && !is_check(board_arr, is_white, &Vec::new(), 2) {
+                moves.push(2)
+            }
+        }
+        if tup.3 {
+            if board_arr[6] == 0 && board_arr[5] == 0 && !is_check(board_arr, is_white, &Vec::new(), 5){
+                moves.push(6)
+            }
+        }
     }
     
     return moves;
@@ -751,6 +764,26 @@ pub fn is_legal(move1: usize, from: usize, board_arr: Vec<i32>, is_white: bool) 
 
 pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
     let temp = board_arr[from];
+    if from == 60 && temp == 1 {
+        if to == 58 {
+            board_arr[56] = 0;
+            board_arr[59] = 3;
+        }
+        if to == 62 {
+            board_arr[63] = 0;
+            board_arr[61] = 3;
+        }
+    }
+    if from == 4 && temp == -1 {
+        if to == 2 {
+            board_arr[0] = 0;
+            board_arr[3] = -3;
+        }
+        if to == 6 {
+            board_arr[7] = 0;
+            board_arr[5] = -3;
+        }
+    }
     if board_arr[from] == 6 && from.abs_diff(to) == 7 {
         board_arr[from + 1] = 0;
     }
@@ -778,14 +811,14 @@ pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
     return board_arr;
 }
 
-pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
+pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> bool {
     let index = king_index(is_white, &board_arr);
-    if gen_moves(index, &board_arr, last).is_empty() {
+    if gen_moves(index, &board_arr, last, tup).is_empty() {
         let mut moves: Vec<usize>;
         if is_white {
             for i in 0..64 {
                 if board_arr[i] >= 1 {
-                    moves = gen_moves(i, &board_arr, last);
+                    moves = gen_moves(i, &board_arr, last, tup);
                     if moves.len() > 0 {
                         return false;
                     }
@@ -796,7 +829,7 @@ pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
         else {
             for i in 0..64 {
                 if board_arr[i] <= -1 {
-                    moves = gen_moves(i, &board_arr, last);
+                    moves = gen_moves(i, &board_arr, last, tup);
                     if moves.len() > 0 {
                         return false;
                     }
@@ -808,20 +841,20 @@ pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> boo
     return false;
 }
 
-pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>) -> bool {
+pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> bool {
     let index = king_index(is_white, &board_arr);
-    return is_check(&board_arr, is_white, last, index) && is_stalemate(board_arr, is_white, last);
+    return is_check(&board_arr, is_white, last, index) && is_stalemate(board_arr, is_white, last, tup);
 }
 
 pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
     let moves = match board_arr[index] {
-        1 => gen_moves_king(index, board_arr, true),
+        1 => gen_moves_king(index, board_arr, true, (false, false, true, true)),
         2 => gen_moves_queen(index, board_arr, true),
         3 => gen_moves_rook(index, board_arr, true),
         4 => gen_moves_bishop(index, board_arr, true),
         5 => gen_moves_knight(index, board_arr, true),
         6 => gen_moves_pawn(index, board_arr, true, last, true),
-        -1 => gen_moves_king(index, board_arr, false),
+        -1 => gen_moves_king(index, board_arr, false, (false, false, true, true)),
         -2 => gen_moves_queen(index, board_arr, false),
         -3 => gen_moves_rook(index, board_arr, false),
         -4 => gen_moves_bishop(index, board_arr, false),
@@ -832,15 +865,15 @@ pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -
     return moves;
 }
 
-pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
+pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> Vec<usize> {
     let mut moves = match board_arr[index] {
-        1 => gen_moves_king(index, board_arr, true),
+        1 => gen_moves_king(index, board_arr, true, tup),
         2 => gen_moves_queen(index, board_arr, true),
         3 => gen_moves_rook(index, board_arr, true),
         4 => gen_moves_bishop(index, board_arr, true),
         5 => gen_moves_knight(index, board_arr, true),
         6 => gen_moves_pawn(index, board_arr, true, last, false),
-        -1 => gen_moves_king(index, board_arr, false),
+        -1 => gen_moves_king(index, board_arr, false, tup),
         -2 => gen_moves_queen(index, board_arr, false),
         -3 => gen_moves_rook(index, board_arr, false),
         -4 => gen_moves_bishop(index, board_arr, false),
@@ -881,7 +914,7 @@ pub fn copy_image(image: &DynamicImage) -> Image {
     for x in 0..dim.0 {
         for y in 0..dim.1 {
             let pixel = image.get_pixel(x, y);
-            image1.set_pixel(x, y, Color { r: pixel.0[0] as f32 / 255.0, g: pixel.0[1] as f32 / 255.0, b: pixel.0[2] as f32 / 255.0, a: pixel.0[3] as f32 / 255.0})
+            image1.set_pixel(x, y, Color {r: pixel.0[0] as f32 / 255.0, g: pixel.0[1] as f32 / 255.0, b: pixel.0[2] as f32 / 255.0, a: pixel.0[3] as f32 / 255.0})
         }
     }
     return image1;
@@ -969,13 +1002,66 @@ pub fn draw_move(moves: Vec<usize>, board_arr: &Vec<i32>) {
     }
 }
 
-pub fn player_turn(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_turn: bool, mut is_pressed: bool, mut found: bool, mut moves: Vec<usize>, mut chosen: usize) -> (Vec<i32>, Vec<i32>, bool, bool, bool, Vec<usize>, usize) {
+pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_turn: bool, mut is_pressed: bool, mut found: bool, mut moves: Vec<usize>, mut chosen: usize, mut rep: i32, mut save: Vec<Vec<i32>>, mut tup: (bool, bool, bool, bool), mut counter: i32) -> (Vec<i32>, Vec<i32>, bool, bool, bool, Vec<usize>, usize, i32, Vec<Vec<i32>>, (bool, bool, bool, bool), i32) {
     if is_pressed {
         let pos = get_mouse_pos();
         for i in moves.clone() {
             if pos == i {
                 last = board_arr.clone();
+                if board_arr[chosen] == 6 || board_arr[chosen] == -6 || board_arr[pos] != 0 {
+                    counter = 0;
+                }
+                else {
+                    if !is_white_turn{
+                        counter += 1;
+                    }
+                }
                 board_arr = move_piece(chosen, pos, board_arr);
+                if is_white_turn {
+                    if tup.0 == true || tup.1 == true {
+                        if chosen == 60 {
+                            tup.0 = false;
+                            tup.1 = false;
+                        }
+                    }
+                    if tup.0 == true {
+                        if chosen == 56 {
+                            tup.0 = false;
+                        }
+                    }
+                    if tup.1 == true {
+                        if chosen == 63 {
+                            tup.1 = false;
+                        }
+                    }
+                }
+                else {
+                    if tup.2 == true || tup.3 == true {
+                        if chosen == 4 {
+                            tup.2 = false;
+                            tup.3 = false;
+                        }
+                    }
+                    if tup.2 == true {
+                        if chosen == 0 {
+                            tup.2 = false;
+                        }
+                    }
+                    if tup.3 == true {
+                        if chosen == 7 {
+                            tup.3 = false;
+                        }
+                    }
+                }
+                save.push(board_arr.clone());
+                if save.len() > 4 && !is_white_turn {
+                    if board_arr == save[save.len() - 5] {
+                        rep += 1;
+                    }
+                    else {
+                        rep = 0;
+                    }
+                }
                 found = true;
                 break;
             }
@@ -990,7 +1076,7 @@ pub fn player_turn(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tur
             is_pressed = false;
             if (board_arr[pos] > 0) == is_white_turn {
                 chosen = pos;
-                moves = gen_moves(pos, &board_arr, &last);
+                moves = gen_moves(pos, &board_arr, &last, tup);
                 draw_move(moves.clone(), &board_arr);
                 is_pressed = true;
             }
@@ -1000,9 +1086,13 @@ pub fn player_turn(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tur
         let pos = get_mouse_pos();
         if (board_arr[pos] > 0) == is_white_turn {
             chosen = pos;
-            moves = gen_moves(pos, &board_arr, &last);
+            moves = gen_moves(pos, &board_arr, &last, tup);
             is_pressed = true;
         }
     }
-    return (board_arr, last, is_white_turn, is_pressed, found, moves, chosen);
+    return (board_arr, last, is_white_turn, is_pressed, found, moves, chosen, rep, save, tup, counter);
+}
+
+pub fn is_insufficient(board_arr: &Vec<i32>) -> bool {
+    todo!()
 }
