@@ -14,9 +14,11 @@ async fn main() {
 
 pub fn pvai() {
     main();
-    todo!("evaluation function- possibly using a neural network");
+    todo!("evaluation function");
+    todo!("train NN");
     todo!("minimax");
     todo!("alpha-beta pruning");
+    todo!("possibly optimize the check function");
     todo!("player vs computer function");
     todo!("computer vs computer function");
 }
