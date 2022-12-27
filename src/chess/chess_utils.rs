@@ -564,15 +564,17 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index - 9);
         }
         if index / 8 == 6 {
-            if board_arr[index - 16] == 0 && !test_check{
+            if board_arr[index - 16] == 0 && board_arr[index - 8] == 0 && !test_check{
                 moves.push(index - 16);
             }
         }
-        if board_arr[index - 9] == 0 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
-            moves.push(index - 9);
-        }
-        if board_arr[index - 7] == 0 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
-            moves.push(index - 7);
+        if index >= 24 && index < 32 {
+            if board_arr[index - 17] == 0 && last[index - 17] == -6 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
+                moves.push(index - 9);
+            }
+            if board_arr[index - 15] == 0 && last[index - 15] == -6 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
+                moves.push(index - 7);
+            }
         }
     }
     else {
@@ -586,15 +588,17 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index + 9);
         }
         if index / 8 == 1 {
-            if board_arr[index + 16] == 0 && !test_check{
+            if board_arr[index + 16] == 0 && board_arr[index + 8] == 0 && !test_check{
                 moves.push(index + 16);
             }
         }
-        if board_arr[index + 9] == 0 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
-            moves.push(index + 9);
-        }
-        if board_arr[index + 7] == 0 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
-            moves.push(index + 7);
+        if index >= 32 && index < 40 {
+            if board_arr[index + 17] == 0 && last[index + 17] == 6 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
+                moves.push(index + 9);
+            }
+            if board_arr[index + 15] == 0 && last[index + 15] == 6 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
+                moves.push(index + 7);
+            }
         }
     }
     return moves;
