@@ -784,16 +784,16 @@ pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
             board_arr[5] = -3;
         }
     }
-    if board_arr[from] == 6 && from.abs_diff(to) == 7 {
+    if board_arr[from] == 6 && from.abs_diff(to) == 7 && board_arr[to] == 0 {
         board_arr[from + 1] = 0;
     }
-    if board_arr[from] == 6 && from.abs_diff(to) == 9 {
+    if board_arr[from] == 6 && from.abs_diff(to) == 9 && board_arr[to] == 0 {
         board_arr[from - 1] = 0;
     }
-    if board_arr[from] == -6 && from.abs_diff(to) == 7 {
+    if board_arr[from] == -6 && from.abs_diff(to) == 7 && board_arr[to] == 0 {
         board_arr[from - 1] = 0;
     }
-    if board_arr[from] == -6 && from.abs_diff(to) == 9 {
+    if board_arr[from] == -6 && from.abs_diff(to) == 9 && board_arr[to] == 0 {
         board_arr[from + 1] = 0;
     }
     board_arr[from] = 0;
