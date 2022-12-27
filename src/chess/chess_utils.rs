@@ -591,7 +591,7 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             }
         }
         if board_arr[index + 9] == 0 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
-            moves.push(index - 9);
+            moves.push(index + 9);
         }
         if board_arr[index + 7] == 0 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
             moves.push(index + 7);
@@ -903,7 +903,7 @@ pub fn window_conf() -> Conf {
         window_title: "chess".to_owned(),
         window_height: 800,
         window_width: 800,
-        window_resizable: false,
+        window_resizable: true,
         ..Default::default()
     }
 }
