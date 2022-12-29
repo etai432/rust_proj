@@ -557,10 +557,10 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
         if board_arr[index - 8] == 0 && !test_check {
             moves.push(index - 8);
         }
-        if board_arr[index - 7] < 0 {
+        if index % 8 != 7 && board_arr[index - 7] < 0 {
             moves.push(index - 7);
         }
-        if board_arr[index - 9] < 0 {
+        if index % 8 != 0 && board_arr[index - 9] < 0 {
             moves.push(index - 9);
         }
         if index / 8 == 6 {
@@ -568,11 +568,11 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
                 moves.push(index - 16);
             }
         }
-        if index >= 24 && index < 32 {
-            if board_arr[index - 17] == 0 && last[index - 17] == -6 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
+        if index >= 24 && index < 32 && !test_check{
+            if index % 8 != 0 && board_arr[index - 17] == 0 && last[index - 17] == -6 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
                 moves.push(index - 9);
             }
-            if board_arr[index - 15] == 0 && last[index - 15] == -6 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
+            if index % 8 != 7 && board_arr[index - 15] == 0 && last[index - 15] == -6 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
                 moves.push(index - 7);
             }
         }
@@ -581,10 +581,10 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
         if board_arr[index + 8] == 0 && !test_check{
             moves.push(index + 8);
         }
-        if board_arr[index + 7] > 0 {
+        if index % 8 != 0 && board_arr[index + 7] > 0 {
             moves.push(index + 7);
         }
-        if board_arr[index + 9] > 0 {
+        if index % 8 != 7 && board_arr[index + 9] > 0 {
             moves.push(index + 9);
         }
         if index / 8 == 1 {
@@ -592,11 +592,11 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
                 moves.push(index + 16);
             }
         }
-        if index >= 32 && index < 40 {
-            if board_arr[index + 17] == 0 && last[index + 17] == 6 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
+        if index >= 32 && index < 40 && !test_check{
+            if index % 8 != 7 && board_arr[index + 17] == 0 && last[index + 17] == 6 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
                 moves.push(index + 9);
             }
-            if board_arr[index + 15] == 0 && last[index + 15] == 6 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
+            if index % 8 != 0 && board_arr[index + 15] == 0 && last[index + 15] == 6 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
                 moves.push(index + 7);
             }
         }
@@ -626,7 +626,7 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             if board_arr[index + 8] <= 0 {
                 moves.push(index + 8);
             }
-            if index % 8 != 9 {
+            if index % 8 != 7 {
                 if board_arr[index + 9] <= 0 {
                     moves.push(index + 9);
                 }
@@ -648,13 +648,13 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             }
         }
         if tup.0 {
-            if board_arr[59] == 0 && board_arr[58] == 0 && board_arr[57] == 0 && !is_check(board_arr, is_white, &Vec::new(), 59) {
-                moves.push(58)
+            if board_arr[59] == 0 && board_arr[58] == 0 && board_arr[57] == 0 && !is_check(board_arr, is_white, &Vec::new(), 59) && !is_check(board_arr, is_white, &Vec::new(), 58) && !is_check(board_arr, is_white, &Vec::new(), 59) && !is_check(board_arr, is_white, &Vec::new(), 60) {
+                moves.push(58);
             }
         }
         if tup.1 {
-            if board_arr[61] == 0 && board_arr[62] == 0 && !is_check(board_arr, is_white, &Vec::new(), 61) {
-                moves.push(62)
+            if board_arr[61] == 0 && board_arr[62] == 0 && !is_check(board_arr, is_white, &Vec::new(), 61) && !is_check(board_arr, is_white, &Vec::new(), 60) && !is_check(board_arr, is_white, &Vec::new(), 62) {
+                moves.push(62);
             }
         }
     }
@@ -678,7 +678,7 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             if board_arr[index + 8] >= 0 {
                 moves.push(index + 8);
             }
-            if index % 8 != 9 {
+            if index % 8 != 7 {
                 if board_arr[index + 9] >= 0 {
                     moves.push(index + 9);
                 }
@@ -700,12 +700,12 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             }
         } 
         if tup.2 {
-            if board_arr[1] == 0 && board_arr[2] == 0 && board_arr[3] == 0 && !is_check(board_arr, is_white, &Vec::new(), 2) {
+            if board_arr[1] == 0 && board_arr[2] == 0 && board_arr[3] == 0 && !is_check(board_arr, is_white, &Vec::new(), 2) && !is_check(board_arr, is_white, &Vec::new(), 3) && !is_check(board_arr, is_white, &Vec::new(), 4){
                 moves.push(2)
             }
         }
         if tup.3 {
-            if board_arr[6] == 0 && board_arr[5] == 0 && !is_check(board_arr, is_white, &Vec::new(), 5){
+            if board_arr[6] == 0 && board_arr[5] == 0 && !is_check(board_arr, is_white, &Vec::new(), 5) && !is_check(board_arr, is_white, &Vec::new(), 4) && !is_check(board_arr, is_white, &Vec::new(), 6){
                 moves.push(6)
             }
         }
