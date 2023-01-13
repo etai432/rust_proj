@@ -1,11 +1,10 @@
 // mod game_of_life;
 // use game_of_life::game;
-mod chess;
-use chess::chess_pvp::chess_pvp;
-// mod NN_rust;
-// use NN_rust::NN;
-// use NN_rust::make_csv;
+// mod chess;
+// use chess::chess_pvp::chess_pvp;
+mod file_renamer;
 
 fn main() {
-    chess_pvp();
+    // chess_pvp();
+    file_renamer::run()
 }
