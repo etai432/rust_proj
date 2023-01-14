@@ -15,10 +15,15 @@ pub fn run() {
                 "cmd" => println!("ls, lsc, "),
                 "ls" => for file in fs::read_dir(&current).unwrap(){println!("{}", file.unwrap().path().display());},
                 "lsc" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if String::from(file.as_ref().unwrap().path().to_str().unwrap()).contains(in_vec[1]){println!("{}", file.unwrap().path().display());}}}else{println!("not given an argument")},
-                "cd" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if file.as_ref().unwrap().path().to_str().unwrap().eq(&(String::from(&current)+in_vec[1..in_vec.len()].join(" ").as_str())){current+=r"\";current+=in_vec[1..in_vec.len()].join(" ").as_str();break;}}}else{println!("not given an argument")},
+                "cd" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if file.as_ref().unwrap().path().to_str().unwrap().eq(&(current.clone() + in_vec[1..in_vec.len()].join(" ").as_str())){current+=in_vec[1..in_vec.len()].join(" ").as_str();current+=r"\";break;}}}else{println!("not given an argument")},
                 "root" => current = String::from(root.clone()),
-                //add: this, cdp, rename, create with text (touch), also maybe do relative paths
-                _ => (),
+                "this" => current = String::from(abs_path.to_str().unwrap()) + r"\",
+                "current" => println!("{}", current),
+                "back" => current = current.split(r"\").collect::<Vec<&str>>().split_last().unwrap().1.split_last().unwrap().1.join(r"\") + r"\",
+                "cdp" => if in_vec.len() > 1 && fs::metadata(String::from(in_vec[1])).is_ok(){current=String::from(in_vec[1])+r"\"}else{println!("couldnt find path")}
+                "rename" => if in_vec.len() > 1{fs::rename(&current[..current.len() - 1], current.split(r"\").collect::<Vec<&str>>().split_last().unwrap().1.split_last().unwrap().1.join(r"\") + r"\" + in_vec[1] + r"." + current.split(r".").collect::<Vec<&str>>()[1]).unwrap()},
+                //add: create with text (touch), also maybe do relative paths
+                _ => println!("unknown command"),
             }
         }
         input = String::new();
