@@ -4,9 +4,9 @@ Stuff I should do with rust:
 3. thread pool
 4. Random numbers crate
 5. Dates and time crate
-6. Learn the async rust book
-7. Create a network service or server using a library like Tokio or async-std
-8. writing a simple raytracer
+6. writing a simple raytracer
+7. Learn the async rust book
+8. Create a network service or server using a library like Tokio or async-std
 9. unsafe rust book
 10. .csv/image manipulation crate
 11. Chess ai
