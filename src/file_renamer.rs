@@ -12,7 +12,7 @@ pub fn run() {
         let in_vec: Vec<&str> = input.split(" ").collect();
         if in_vec.len() > 0 {
             match in_vec[0] {
-                "cmd" => println!("commands: ls, cd, root, env, this, current, back, cdp, cdr, rename"),
+                "cmd" => println!("commands: ls, cd, root, env, this, current, back, cdp, cdr, rename, done"),
                 "ls" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if String::from(file.as_ref().unwrap().path().to_str().unwrap()).contains(in_vec[1]){println!("{}", file.unwrap().path().display());}}}else{for file in fs::read_dir(&current).unwrap(){println!("{}", file.unwrap().path().display());}},
                 "cd" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if file.as_ref().unwrap().path().to_str().unwrap().eq(&(current.clone() + in_vec[1..in_vec.len()].join(" ").as_str())){current+=in_vec[1..in_vec.len()].join(" ").as_str();current+=r"\";break;}}}else{println!("not given an argument")},
                 "root" => current = String::from(root.clone()),
