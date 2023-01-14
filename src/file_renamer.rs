@@ -12,7 +12,7 @@ pub fn run() {
         let in_vec: Vec<&str> = input.split(" ").collect();
         if in_vec.len() > 0 {
             match in_vec[0] {
-                "cmd" => println!("ls, lsc, "),
+                "cmd" => println!("ls, lsc, cd, root, env, this, current, back, cdp, cdr, rename"),
                 "ls" => for file in fs::read_dir(&current).unwrap(){println!("{}", file.unwrap().path().display());},
                 "lsc" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if String::from(file.as_ref().unwrap().path().to_str().unwrap()).contains(in_vec[1]){println!("{}", file.unwrap().path().display());}}}else{println!("not given an argument")},
                 "cd" => if in_vec.len() > 1{for file in fs::read_dir(&current).unwrap(){if file.as_ref().unwrap().path().to_str().unwrap().eq(&(current.clone() + in_vec[1..in_vec.len()].join(" ").as_str())){current+=in_vec[1..in_vec.len()].join(" ").as_str();current+=r"\";break;}}}else{println!("not given an argument")},
@@ -22,8 +22,9 @@ pub fn run() {
                 "current" => println!("{}", current),
                 "back" => current = current.split(r"\").collect::<Vec<&str>>().split_last().unwrap().1.split_last().unwrap().1.join(r"\") + r"\",
                 "cdp" => if in_vec.len() > 1 && fs::metadata(String::from(in_vec[1])).is_ok(){current=String::from(in_vec[1])+r"\"}else{println!("couldnt find path")}
+                "cdr" => if in_vec.len() > 1 && fs::metadata(String::from(abs_path.to_str().unwrap())+r"\"+in_vec[1]).is_ok(){current=String::from(abs_path.to_str().unwrap())+r"\"+in_vec[1]+r"\"}else{println!("not given a path")},
                 "rename" => if in_vec.len() > 1{fs::rename(&current[..current.len() - 1], current.split(r"\").collect::<Vec<&str>>().split_last().unwrap().1.split_last().unwrap().1.join(r"\") + r"\" + in_vec[1] + r"." + current.split(r".").collect::<Vec<&str>>()[1]).unwrap()},
-                //add: create with text (touch), also maybe do relative paths
+                //add: create with text (touch), possibly add editing and deleting
                 _ => println!("unknown command"),
             }
         }
