@@ -1,6 +1,7 @@
 Stuff I should do with rust:
 1. Cli file renamer (very cool)- done
-2. rust design patterns book
+2. rust design patterns book - only what i need
+2.5 learn how to build macros
 3. thread pool
 4. Random numbers crate
 5. Dates and time crate
