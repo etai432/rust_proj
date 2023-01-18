@@ -8,6 +8,6 @@ use learning_rust::macros;
 
 fn main() {
     // chess_pvp();
-    // file_renamer::run()
+    // file_renamer::run() test
     macros::run();
 }
