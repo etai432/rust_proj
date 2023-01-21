@@ -899,6 +899,9 @@ pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>, tup: (bool
 
 pub fn get_mouse_pos() -> usize {
     let mouse_pos = mouse_position();
+    if mouse_pos.0 as usize / 100 + mouse_pos.1 as usize / 100 * 8 > 63 {
+        return 63
+    }
     return mouse_pos.0 as usize / 100 + mouse_pos.1 as usize / 100 * 8;
 }
 
