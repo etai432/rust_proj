@@ -11,5 +11,5 @@ fn main() {
     // chess_pvp();
     // file_renamer::run()
     // macros::run();
-    thread_pool::build_vec();
+    thread_pool::run();
 }
