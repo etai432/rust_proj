@@ -14,8 +14,6 @@ async fn main() {
 
 pub fn pvai() {
     main();
-    todo!("evaluation function");
-    todo!("train NN");
     todo!("minimax");
     todo!("alpha-beta pruning");
     todo!("possibly optimize the check function");
