@@ -5,11 +5,11 @@
 // mod file_renamer;
 // mod learning_rust;
 // use learning_rust::macros;
-mod thread_pool;
+// mod thread_pool
 
 fn main() {
     // chess_pvp();
     // file_renamer::run()
     // macros::run();
-    thread_pool::run();
+    // thread_pool::run();
 }
