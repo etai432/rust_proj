@@ -8,11 +8,17 @@
 // use learning_rust::macros;
 // mod thread_pool
 mod time_utils;
+mod random_utils;
+use random_utils::{random, rng};
 // use crate::timeit;
 
 fn main() {
     // time_utils::test();
-    timeit!();
+    for i in 0..30 {
+        let mut rand = random_utils::rng(0, 100);
+        println!("{}", rand);
+    }
+    // timeit!();
     // pvai();
     // chess_pvp();
     // file_renamer::run()

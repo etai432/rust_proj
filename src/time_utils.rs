@@ -36,13 +36,6 @@ macro_rules! timeit {
     };
 }
 
-pub fn test() {
-    timeit!(something());
-}
 
-pub fn something() {
-
-}
-
-//functions to make: timeit (might be a macro)
+//functions to make: timeit (might be a macro) - done
 //

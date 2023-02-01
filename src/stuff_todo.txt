@@ -4,8 +4,8 @@ Stuff I should do with rust:
 2.5 learn how to build macros - done
 2.75 practice building macros - done
 3. thread pool - gave up
-4. Random numbers crate
-5. Dates and time crate
+4. Random numbers crate - almost done
+5. Dates and time crate - done
 6. writing a simple raytracer
 7. Learn the async rust book
 8. Create a network service or server using a library like Tokio or async-std
