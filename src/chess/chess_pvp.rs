@@ -12,7 +12,7 @@ async fn main() {
     let mut found: bool = false;
     let mut moves: Vec<usize> = Vec::new();
     let mut chosen: usize = 64;
-    let (mut board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn) = restart();
+    let (mut board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn) = restart(false);
     let mut last: Vec<i32> = board_arr.clone();
     while !(is_checkmate(board_arr.clone(), is_white_turn, &last, tup) || is_stalemate(board_arr.clone(), is_white_turn, &last, tup) || rep == 3 || counter == 50 || is_insufficient(&board_arr)) {
         draw_board(&board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn);

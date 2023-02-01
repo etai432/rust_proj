@@ -927,8 +927,14 @@ pub fn copy_image(image: &DynamicImage) -> Image {
     return image1;
 }
 //board array, board, king-1, queen-2, rook-3, bishop-4, horse-5, pawn-6. negative for black
-pub fn restart() -> (Vec<i32>, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D) {
-    let board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+pub fn restart(random: bool) -> (Vec<i32>, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D) {
+    let mut board_arr:Vec<i32> = Vec::new();
+    if random {
+        board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+        board_arr = vec![3, 5, 4, 2, 1, 4, 5, 3, 6, 6, 6, 6, 6, 6 ,6 ,6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6, -6, -6, -6, -6, -6, -6, -6, -3, -5, -4, -2, -1, -4, -5, -3];
+    } else {
+        board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+    }
     // let board_arr = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let board = Texture2D::from_file_with_format(include_bytes!("board.png"),None,);
     let wking = Texture2D::from_file_with_format(include_bytes!("white_king.png"),None,);
@@ -1142,3 +1148,5 @@ pub fn count_pieces(board_arr: &Vec<i32>, is_white: bool) -> (i32, i32, i32, i32
     }
     return tup;
 }
+
+//todo: 1. to FEN function
