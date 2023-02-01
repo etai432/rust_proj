@@ -8,9 +8,11 @@
 // use learning_rust::macros;
 // mod thread_pool
 mod time_utils;
+// use crate::timeit;
 
 fn main() {
-    time_utils::test()
+    // time_utils::test();
+    timeit!();
     // pvai();
     // chess_pvp();
     // file_renamer::run()
