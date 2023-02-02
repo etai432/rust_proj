@@ -16,7 +16,7 @@ fn get_frame(shapes: &Vec<&dyn Volume>, camera: &Camera) -> Image {
         for y in 0..camera.screen.1 {
             let ray = Ray {
                 origin: (camera.position.0 + x as f32, camera.position.1 + y as f32, camera.position.2),
-                direction: camera.direction,
+                direction: (0.0, 0.0, 1.0), // for now, change to be from camera through pixel
             };
             // println!("{:?}", ray.direction);
             for i in shapes.iter() {
