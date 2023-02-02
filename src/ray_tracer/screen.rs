@@ -16,12 +16,12 @@ fn get_frame(shapes: &Vec<&dyn Volume>, camera: &Camera) -> Image {
         for y in 0..camera.screen.1 {
             let ray = Ray {
                 origin: (camera.position.0 + x as f32, camera.position.1 + y as f32, camera.position.2),
-                direction: (0.0, 0.0, 1.0), // for now, change to be from camera through pixel
+                direction: camera.direction, // for now, change to be from camera through pixel
             };
             // println!("{:?}", ray.direction);
+            let mut min_d = std::f32::MAX;
+            let mut color: (u8, u8, u8) = (0, 0, 0);
             for i in shapes.iter() {
-                let mut min_d = std::f32::MAX;
-                let mut color: (u8, u8, u8) = (0, 0, 0);
                 match i.get_intersection(&ray) {
                     Some(d) => if d < min_d {
                         min_d = d;
@@ -33,7 +33,7 @@ fn get_frame(shapes: &Vec<&dyn Volume>, camera: &Camera) -> Image {
             }
         }
     }
-    image
+    return image;
 }
 
 struct Camera {
@@ -48,14 +48,24 @@ struct Camera {
 async fn main() {
     let mut shapes: Vec<&dyn Volume> = Vec::new();
     shapes.push(&Sphere {
-        color: (255, 255, 255),
-        center: (400.0, 270.0, 10.0),
+        color: (0, 255, 0),
+        center: (350.0, 270.0, 10.0),
+        radius: 100.0,
+    });
+    shapes.push(&Sphere {
+        color: (255, 0, 0),
+        center: (650.0, 270.0, 110.0),
+        radius: 100.0,
+    });
+    shapes.push(&Sphere {
+        color: (0, 0, 255),
+        center: (500.0, 270.0, 50.0),
         radius: 100.0,
     });
     let mut camera = Camera {
         screen: (screen_width() as i32, screen_height() as i32),
         position: (0.0, 0.0, 0.0),
-        direction: (0.0, 0.0, 1.0),
+        direction: (0.0, 0.0, -1.0),
         fov: 90.0,
     };
     loop {
