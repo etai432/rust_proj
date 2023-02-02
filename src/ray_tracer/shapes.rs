@@ -3,8 +3,8 @@ pub struct Ray {
     pub direction: (f32, f32, f32)
 }
 
-pub trait Volume {
-    fn get_intersection(&self, ray: &Ray) -> Option<f32>;
+pub trait Render {
+    fn get_intersection(&self, ray: &Ray) -> Option<(f32, (f32, f32, f32))>;
     fn color(&self) -> (u8, u8, u8);
 }
 
@@ -14,8 +14,8 @@ pub struct Sphere {
     pub radius: f32,
 }
 
-impl Volume for Sphere {
-    fn get_intersection(&self, ray: &Ray) -> Option<f32> {
+impl Render for Sphere {
+    fn get_intersection(&self, ray: &Ray) -> Option<(f32, (f32, f32, f32))> {
         let oc = (
             self.center.0 - ray.origin.0,
             self.center.1 - ray.origin.1,
@@ -28,7 +28,12 @@ impl Volume for Sphere {
             None
         } else {
             let t = (-b - disc.sqrt()) / 2.0;
-            Some(t)
+            let normal = (
+                (oc.0 + ray.direction.0 * t) / self.radius,
+                (oc.1 + ray.direction.1 * t) / self.radius,
+                (oc.2 + ray.direction.2 * t) / self.radius
+            );
+            Some((t, normal))
         }
     }
     fn color(&self) -> (u8, u8, u8) {
