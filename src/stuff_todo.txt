@@ -1,17 +1,9 @@
 Stuff I should do with rust:
-1. Cli file renamer (very cool)- done
-2. rust design patterns book - done for now
-2.5 learn how to build macros - done
-2.75 practice building macros - done
-3. thread pool - gave up
-4. Random numbers crate - almost done
-5. Dates and time crate - done
-6. writing a simple raytracer
-7. Learn the async rust book
-8. Create a network service or server using a library like Tokio or async-std
-9. unsafe rust book
-10. .csv/image manipulation crate
-11. Chess ai - gave up
+9. later - unsafe and async rust books
+10. later .csv/image manipulation crate
 
-(maybe) Learn how to use docker
-(very hard) Create a scripting language using Rust
+impossible ass projects:
+writing a simple raytracer
+build a neural netowrk
+Create a scripting language using Rust
+build a simple kernel

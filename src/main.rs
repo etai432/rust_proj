@@ -7,17 +7,15 @@
 // mod learning_rust;
 // use learning_rust::macros;
 // mod thread_pool
-mod time_utils;
-mod random_utils;
-use random_utils::{random, rng};
+// mod time_utils;
+// mod random_utils;
 // use crate::timeit;
+mod ray_tracer;
+use ray_tracer::screen::run;
 
 fn main() {
+    run();
     // time_utils::test();
-    for i in 0..30 {
-        let mut rand = random_utils::rng(0, 100);
-        println!("{}", rand);
-    }
     // timeit!();
     // pvai();
     // chess_pvp();
