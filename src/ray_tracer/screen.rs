@@ -25,7 +25,7 @@ fn angle_between_ray_and_normal(ray: &Ray, normal: &(f32, f32, f32)) -> f32 {
 }
 
 fn change_rgb_color(rgb: &(u8, u8, u8), angle: f32) -> (u8, u8, u8) {
-    let intensity = (angle / f32::consts::PI).powf(2.0);
+    let intensity = (angle / f32::consts::PI).powf(3.0) * 1.5;
     (
         (rgb.0 as f32 * intensity) as u8,
         (rgb.1 as f32 * intensity) as u8,
@@ -33,12 +33,13 @@ fn change_rgb_color(rgb: &(u8, u8, u8), angle: f32) -> (u8, u8, u8) {
     )
 }
 
-fn get_frame(shapes: &Vec<&dyn Render>, camera: &Camera, skip: usize) -> Image {
+fn get_frame(shapes: &Vec<&dyn Render>, camera: &Camera, skip: usize, light: &Ray) -> Image {
     let mut image = Image::gen_image_color(camera.screen.0 as u16, camera.screen.1 as u16, BLACK);
     for x in (0..camera.screen.0).step_by(skip) {
         for y in (0..camera.screen.1).step_by(skip) {
             let ray = Ray {
-                origin: camera.position,
+                // origin: camera.position,
+                origin: (camera.position.0, camera.position.1, camera.position.2 + 100.0 * camera.direction.2),
                 direction: normalize(
                     (
                       (x as f32 - camera.screen.0 as f32 / 2.0) / (camera.screen.0 as f32 / 2.0) * (camera.screen.0 as f32 / camera.screen.1 as f32) + camera.direction.0,
@@ -53,7 +54,7 @@ fn get_frame(shapes: &Vec<&dyn Render>, camera: &Camera, skip: usize) -> Image {
                     Some(d) => if d.0 < min_d {
                         min_d = d.0;
                         color = i.color();
-                        let angle = angle_between_ray_and_normal(&ray, &d.1);
+                        let angle = angle_between_ray_and_normal(&light, &d.1);
                         color = change_rgb_color(&color, angle);
                     },
                     None => (),
@@ -79,6 +80,10 @@ struct Camera {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    let light = Ray {
+        origin: (0.0, 0.0, 0.0),
+        direction: (0.5, -0.5, -1.0),
+    };
     let mut shapes: Vec<&dyn Render> = Vec::new();
     shapes.push(&Sphere {
         color: (0, 0, 255),
@@ -92,19 +97,19 @@ async fn main() {
     });
     // shapes.push(&Sphere {
     //     color: (0, 0, 255),
-    //     center: (-120.0, 100.0, -350.0),
+    //     center: (400.0, 0.0, 300.0),
     //     radius: 100.0,
     // });
     let mut camera = Camera {
         screen: (screen_width() as i32, screen_height() as i32),
-        position: (100.0, 0.0, 150.0),
+        position: (100.0, 0.0, 0.0),
         direction: (0.0, 0.0, -1.0),
         fov: 90.0,
     };
     let mut count = 0;
     loop {
         count += 1;
-        let image = get_frame(&shapes, &camera, 1);
+        let image = get_frame(&shapes, &camera, 1, &light);
         let image_texture = Texture2D::from_image(&image);
         draw_texture(image_texture, 0.0, 0.0, WHITE);
         next_frame().await;

@@ -3,7 +3,7 @@ Stuff I should do with rust:
 10. later .csv/image manipulation crate
 
 impossible ass projects:
-writing a simple raytracer
+writing a simple raytracer - done for now, can get better
 build a neural netowrk
 Create a scripting language using Rust
 build a simple kernel
