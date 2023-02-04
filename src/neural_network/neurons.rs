@@ -54,7 +54,7 @@ impl Network {
             self.neurons[0][i].value = inputs[i];
         }
         for layer in 1..self.neurons.len() {
-            for neuron in 0..layer {
+            for neuron in 0..self.neurons[layer].len() {
                 self.activate((layer, neuron));
             }
         }

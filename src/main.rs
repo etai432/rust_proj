@@ -15,9 +15,9 @@
 mod neural_network;
 
 fn main() {
-    let mut n = neural_network::neurons::Network::new(vec![2, 1]);
-    println!("{:?}", n.predict(vec![0.5, 0.1]));
-    println!("{:?}", n);
+    let mut n = neural_network::neurons::Network::new(vec![5, 4, 3, 2, 1]);
+    println!("{:?}", n.predict(vec![0.5, 0.1, 0.3, 0.7, 0.2]));
+    // println!("{:?}", n);
     // run();
     // time_utils::test();
     // timeit!();
