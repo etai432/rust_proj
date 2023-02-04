@@ -1,4 +1,5 @@
-use rand::{prelude::*, seq::index};
+use rand::{prelude::*};
+use std::f32::{MIN, MAX};
 #[derive(Debug)]
 pub struct Neuron {
     pub bias: f32,
@@ -16,16 +17,13 @@ impl Neuron {
             place: place,
         }
     }
-
-    pub fn update() {//updates weights and bias
-        todo!()
-    }
 }
 
 #[derive(Debug)]
 pub struct Network {
     pub neurons: Vec<Vec<Neuron>>,//vector of layers
     pub learning_rate: f32,
+    //ouput activation!
 }
 
 impl Network {
@@ -75,19 +73,39 @@ impl Network {
         self.neurons[place.0][place.1].value = sum + self.neurons[place.0][place.1].bias;
     }
 
-    pub fn fit() {
+    pub fn fit(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> f32 { //returns loss
+        todo!();
+    }
+
+    pub fn eval(inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> (f32, f32) { //returns accuracy and loss
         todo!()
     }
 
-    pub fn eval() {
-        todo!()
+    pub fn loss(&self, label: Vec<f32>, prediction: Vec<f32>) -> f32 { //mse
+        let mut diff: Vec<f32> = (0..label.len()).map(|i| label[i] - prediction[i]).collect();
+        diff = (0..diff.len()).map(|i| diff[i].powf(2.0)).collect();
+        return diff.iter().copied().sum::<f32>() / diff.len() as f32;
     }
 
-    fn loss() {
-        todo!()
+    fn error(&self, label: Vec<f32>, prediction: Vec<f32>) -> Vec<f32> {
+        return (0..label.len()).map(|i| label[i] - prediction[i]).collect();
     }
 
-    fn error(input: (Vec<f32>, Vec<f32>)) -> f32 {
-        todo!()
+    pub fn normalize(input: Vec<f32>) -> Vec<f32> {
+        let mut min = MAX;
+        let mut max = MIN;
+        for i in input.iter().copied() {
+            if i > max {
+                max = i;
+            }
+            if i < min {
+                min = i;
+            }
+        }
+        let mut output: Vec<f32> = Vec::new();
+        for i in input.iter().copied() {
+            output.push((i - min)/(max - min));
+        }
+        return output;
     }
 }
