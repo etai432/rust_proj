@@ -10,11 +10,15 @@
 // mod time_utils;
 // mod random_utils;
 // use crate::timeit;
-mod ray_tracer;
-use ray_tracer::screen::run;
+// mod ray_tracer;
+// use ray_tracer::screen::run;
+mod neural_network;
 
 fn main() {
-    run();
+    let mut n = neural_network::neurons::Network::new(vec![2, 1]);
+    println!("{:?}", n.predict(vec![0.5, 0.1]));
+    println!("{:?}", n);
+    // run();
     // time_utils::test();
     // timeit!();
     // pvai();
