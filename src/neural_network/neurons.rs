@@ -41,7 +41,7 @@ impl Network {
             neurons.push(layer1);
         }
         neurons.reverse();
-        return Network {neurons: neurons, learning_rate: 0.001};
+        return Network {neurons: neurons, learning_rate: 0.0001};
     }
 
     pub fn predict(&mut self, inputs: Vec<f32>) -> Option<Vec<f32>> {
@@ -73,8 +73,34 @@ impl Network {
         self.neurons[place.0][place.1].value = sum + self.neurons[place.0][place.1].bias;
     }
 
-    pub fn fit(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> f32 { //returns loss
-        todo!();
+    pub fn fit(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> f32 { //returns loss, uses back propagation
+        if inputs.len() != labels.len() {
+            return 0.0;
+        }
+        let mut changes: Vec<f32> = (0..labels[0].len()).map(|_| 0.0).collect(); //the changes we want the make for the last neurons
+        let predicts = inputs.into_iter().map(|input| self.predict(input).unwrap()).collect::<Vec<Vec<f32>>>();
+        for i in 0..predicts.len() {//per prediction
+            for j in 0..predicts[0].len() {//per value in prediction
+                changes[j] += labels[i][j] - predicts[i][j];
+            }
+        }
+        for layer in (1..self.neurons.len()).rev() {
+            for neuron in 0..self.neurons[layer].len() { //updating the weights
+                for bf_neuron in 0..self.neurons[layer - 1].len() {
+                    self.neurons[layer-1][bf_neuron].weights[neuron] -= self.learning_rate * changes[neuron] * self.neurons[layer][neuron].value;
+                    self.neurons[layer-1][bf_neuron].bias -= self.learning_rate * changes[neuron];
+                }
+            }
+            let mut new_changes: Vec<f32> = (0..self.neurons[layer - 1].len()).map(|_| 0.0).collect();
+            println!("{:?}", changes);
+            for bf_neuron in 0..self.neurons[layer-1].len() {//for each wanted change neuron
+                for neuron in 0..self.neurons[layer].len() {//for each neuron in current layer
+                    new_changes[bf_neuron] += self.neurons[layer-1][bf_neuron].weights[neuron] * changes[neuron];
+                }
+            }
+            changes = new_changes;
+        }
+        (0..predicts.len()).map(|i| self.loss(labels[i].clone(), predicts[i].clone())).sum::<f32>() / (predicts.len() as f32)
     }
 
     pub fn eval(inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> (f32, f32) { //returns accuracy and loss
@@ -89,6 +115,12 @@ impl Network {
 
     fn error(&self, label: Vec<f32>, prediction: Vec<f32>) -> Vec<f32> {
         return (0..label.len()).map(|i| label[i] - prediction[i]).collect();
+    }
+
+    fn cost(&self, label: Vec<f32>, prediction: Vec<f32>) -> f32 { //mse
+        let mut diff: Vec<f32> = (0..label.len()).map(|i| label[i] - prediction[i]).collect();
+        diff = (0..diff.len()).map(|i| diff[i].powf(2.0)).collect();
+        return diff.iter().copied().sum::<f32>();
     }
 
     pub fn normalize(input: Vec<f32>) -> Vec<f32> {
