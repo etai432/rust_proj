@@ -1,6 +1,5 @@
 use macroquad::prelude::*;
 use crate::chess::chess_utils::*;
-use pyo3::prelude::*;
 
 #[macroquad::main(window_conf)]
 async fn main() {

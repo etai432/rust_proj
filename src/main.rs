@@ -1,5 +1,5 @@
 use rand::prelude::*;
-use std::fs;
+// use std::fs;
 // mod game_of_life;
 // use game_of_life::game;
 // mod chess;
@@ -15,18 +15,19 @@ use std::fs;
 // mod ray_tracer;
 // use ray_tracer::screen::run;
 mod neural_network;
-mod etai;
+// mod etai;
 
 fn main() {
-    let data = fs::read_to_string(r"src\etai\test.et").unwrap();
-    println!("{:?}", etai::lexer::tokenize(data));
-    // let mut n = neural_network::neurons::Network::new(vec![2, 32, 1]);
-    // let mut rng = rand::thread_rng();
-    // for i in 0..100 {
-    //     let x: Vec<Vec<f32>> = (0..100).map(|_| vec![rng.gen_range(0..10) as f32, rng.gen_range(0..10) as f32]).collect();
-    //     let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
-    //     println!("{}", n.fit(x, y));
-    // }
-    // println!("{}", n.predict(vec![3.0, 4.0]).unwrap()[0]);
-    // println!("{:?}", n);
+    // let data = fs::read_to_string(r"src\etai\test.et").unwrap();
+    // println!("{:?}", etai::lexer::tokenize(data));
+    let mut n = neural_network::neurons::Network::new(vec![2, 32, 1]);
+    let mut rng = rand::thread_rng();
+    for i in 0..100 {
+        let x: Vec<Vec<f32>> = (0..100).map(|_| vec![rng.gen_range(0..10) as f32, rng.gen_range(0..10) as f32]).collect();
+        let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
+        println!("{}", n.fit(x, y));
+    }
+    println!("{}", n.predict(vec![3.0, 4.0]).unwrap()[0]);
+    println!("{:?}", n);
+    // chess_pvp();
 }
