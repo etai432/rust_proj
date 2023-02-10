@@ -15,19 +15,20 @@ use rand::prelude::*;
 // mod ray_tracer;
 // use ray_tracer::screen::run;
 mod neural_network;
+use neural_network::neurons::Activation;
 // mod etai;
 
 fn main() {
     // let data = fs::read_to_string(r"src\etai\test.et").unwrap();
     // println!("{:?}", etai::lexer::tokenize(data));
-    let mut n = neural_network::neurons::Network::new(vec![2, 32, 1]);
+    let mut n = neural_network::neurons::Network::new(vec![2, 8, 1], 0.000003, vec![Activation::Linear, Activation::Linear, Activation::Linear]);
     let mut rng = rand::thread_rng();
-    for i in 0..100 {
-        let x: Vec<Vec<f32>> = (0..100).map(|_| vec![rng.gen_range(0..10) as f32, rng.gen_range(0..10) as f32]).collect();
-        let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
-        println!("{}", n.fit(x, y));
+    for i in 0..100000 {
+        let x: Vec<Vec<f32>> = (0..1).map(|_| vec![rng.gen_range(0..100) as f32, rng.gen_range(0..100) as f32]).collect();
+        let y: Vec<Vec<f32>> = (0..1).map(|i| vec![x[i][0] + x[i][1]]).collect();
+        n.fit(x, y);
     }
-    println!("{}", n.predict(vec![3.0, 4.0]).unwrap()[0]);
+    println!("{}", n.predict(vec![52.5, 68.3]).unwrap()[0]);
     println!("{:?}", n);
     // chess_pvp();
 }
