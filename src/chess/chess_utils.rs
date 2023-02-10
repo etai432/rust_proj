@@ -1,6 +1,6 @@
-use std::cmp::min;
-use macroquad::prelude::*;
 use image::*;
+use macroquad::prelude::*;
+use std::cmp::min;
 
 pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
@@ -9,12 +9,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..8 - index % 8 {
             if board_arr[index + i] == 0 {
                 moves.push(index + i);
-            }
-            else if board_arr[index + i] < 0 {
+            } else if board_arr[index + i] < 0 {
                 moves.push(index + i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -22,12 +20,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..index % 8 + 1 {
             if board_arr[index - i] == 0 {
                 moves.push(index - i);
-            }
-            else if board_arr[index - i] < 0 {
+            } else if board_arr[index - i] < 0 {
                 moves.push(index - i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -35,12 +31,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..8 - index / 8 {
             if board_arr[index + i * 8] == 0 {
                 moves.push(index + i * 8);
-            }
-            else if board_arr[index + i * 8] < 0 {
+            } else if board_arr[index + i * 8] < 0 {
                 moves.push(index + i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -48,12 +42,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..index / 8 + 1 {
             if board_arr[index - i * 8] == 0 {
                 moves.push(index - i * 8);
-            }
-            else if board_arr[index - i * 8] < 0 {
+            } else if board_arr[index - i * 8] < 0 {
                 moves.push(index - i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -61,12 +53,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(index / 8 + 1, 8 - index % 8) {
             if board_arr[index - i * 7] == 0 {
                 moves.push(index - i * 7);
-            }
-            else if board_arr[index - i * 7] < 0 {
+            } else if board_arr[index - i * 7] < 0 {
                 moves.push(index - i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -74,12 +64,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(index / 8 + 1, index % 8 + 1) {
             if board_arr[index - i * 9] == 0 {
                 moves.push(index - i * 9);
-            }
-            else if board_arr[index - i * 9] < 0 {
+            } else if board_arr[index - i * 9] < 0 {
                 moves.push(index - i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -87,12 +75,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(8 - index / 8, 8 - index % 8) {
             if board_arr[index + i * 9] == 0 {
                 moves.push(index + i * 9);
-            }
-            else if board_arr[index + i * 9] < 0 {
+            } else if board_arr[index + i * 9] < 0 {
                 moves.push(index + i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -100,27 +86,22 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(8 - index / 8, index % 8 + 1) {
             if board_arr[index + i * 7] == 0 {
                 moves.push(index + i * 7);
-            }
-            else if board_arr[index + i * 7] < 0 {
+            } else if board_arr[index + i * 7] < 0 {
                 moves.push(index + i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
-    }
-    else {
+    } else {
         //right
         for i in 1..8 - index % 8 {
             if board_arr[index + i] == 0 {
                 moves.push(index + i);
-            }
-            else if board_arr[index + i] > 0 {
+            } else if board_arr[index + i] > 0 {
                 moves.push(index + i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -128,12 +109,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..index % 8 + 1 {
             if board_arr[index - i] == 0 {
                 moves.push(index - i);
-            }
-            else if board_arr[index - i] > 0 {
+            } else if board_arr[index - i] > 0 {
                 moves.push(index - i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -141,12 +120,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..8 - index / 8 {
             if board_arr[index + i * 8] == 0 {
                 moves.push(index + i * 8);
-            }
-            else if board_arr[index + i * 8] > 0 {
+            } else if board_arr[index + i * 8] > 0 {
                 moves.push(index + i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -154,12 +131,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..index / 8 + 1 {
             if board_arr[index - i * 8] == 0 {
                 moves.push(index - i * 8);
-            }
-            else if board_arr[index - i * 8] > 0 {
+            } else if board_arr[index - i * 8] > 0 {
                 moves.push(index - i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -167,12 +142,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(index / 8 + 1, 8 - index % 8) {
             if board_arr[index - i * 7] == 0 {
                 moves.push(index - i * 7);
-            }
-            else if board_arr[index - i * 7] > 0 {
+            } else if board_arr[index - i * 7] > 0 {
                 moves.push(index - i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -180,12 +153,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(index / 8 + 1, index % 8 + 1) {
             if board_arr[index - i * 9] == 0 {
                 moves.push(index - i * 9);
-            }
-            else if board_arr[index - i * 9] > 0 {
+            } else if board_arr[index - i * 9] > 0 {
                 moves.push(index - i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -193,12 +164,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(8 - index / 8, 8 - index % 8) {
             if board_arr[index + i * 9] == 0 {
                 moves.push(index + i * 9);
-            }
-            else if board_arr[index + i * 9] > 0 {
+            } else if board_arr[index + i * 9] > 0 {
                 moves.push(index + i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -206,12 +175,10 @@ pub fn gen_moves_queen(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Ve
         for i in 1..min(8 - index / 8, index % 8 + 1) {
             if board_arr[index + i * 7] == 0 {
                 moves.push(index + i * 7);
-            }
-            else if board_arr[index + i * 7] > 0 {
+            } else if board_arr[index + i * 7] > 0 {
                 moves.push(index + i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -226,12 +193,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(index / 8 + 1, 8 - index % 8) {
             if board_arr[index - i * 7] == 0 {
                 moves.push(index - i * 7);
-            }
-            else if board_arr[index - i * 7] < 0 {
+            } else if board_arr[index - i * 7] < 0 {
                 moves.push(index - i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -239,12 +204,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(index / 8 + 1, index % 8 + 1) {
             if board_arr[index - i * 9] == 0 {
                 moves.push(index - i * 9);
-            }
-            else if board_arr[index - i * 9] < 0 {
+            } else if board_arr[index - i * 9] < 0 {
                 moves.push(index - i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -252,12 +215,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(8 - index / 8, 8 - index % 8) {
             if board_arr[index + i * 9] == 0 {
                 moves.push(index + i * 9);
-            }
-            else if board_arr[index + i * 9] < 0 {
+            } else if board_arr[index + i * 9] < 0 {
                 moves.push(index + i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -265,27 +226,22 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(8 - index / 8, index % 8 + 1) {
             if board_arr[index + i * 7] == 0 {
                 moves.push(index + i * 7);
-            }
-            else if board_arr[index + i * 7] < 0 {
+            } else if board_arr[index + i * 7] < 0 {
                 moves.push(index + i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
-    }
-    else {
+    } else {
         //up-right
         for i in 1..min(index / 8 + 1, 8 - index % 8) {
             if board_arr[index - i * 7] == 0 {
                 moves.push(index - i * 7);
-            }
-            else if board_arr[index - i * 7] > 0 {
+            } else if board_arr[index - i * 7] > 0 {
                 moves.push(index - i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -293,12 +249,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(index / 8 + 1, index % 8 + 1) {
             if board_arr[index - i * 9] == 0 {
                 moves.push(index - i * 9);
-            }
-            else if board_arr[index - i * 9] > 0 {
+            } else if board_arr[index - i * 9] > 0 {
                 moves.push(index - i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -306,12 +260,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(8 - index / 8, 8 - index % 8) {
             if board_arr[index + i * 9] == 0 {
                 moves.push(index + i * 9);
-            }
-            else if board_arr[index + i * 9] > 0 {
+            } else if board_arr[index + i * 9] > 0 {
                 moves.push(index + i * 9);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -319,12 +271,10 @@ pub fn gen_moves_bishop(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
         for i in 1..min(8 - index / 8, index % 8 + 1) {
             if board_arr[index + i * 7] == 0 {
                 moves.push(index + i * 7);
-            }
-            else if board_arr[index + i * 7] > 0 {
+            } else if board_arr[index + i * 7] > 0 {
                 moves.push(index + i * 7);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -339,12 +289,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..8 - index % 8 {
             if board_arr[index + i] == 0 {
                 moves.push(index + i);
-            }
-            else if board_arr[index + i] < 0 {
+            } else if board_arr[index + i] < 0 {
                 moves.push(index + i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -352,12 +300,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..index % 8 + 1 {
             if board_arr[index - i] == 0 {
                 moves.push(index - i);
-            }
-            else if board_arr[index - i] < 0 {
+            } else if board_arr[index - i] < 0 {
                 moves.push(index - i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -365,12 +311,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..8 - index / 8 {
             if board_arr[index + i * 8] == 0 {
                 moves.push(index + i * 8);
-            }
-            else if board_arr[index + i * 8] < 0 {
+            } else if board_arr[index + i * 8] < 0 {
                 moves.push(index + i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -378,27 +322,22 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..index / 8 + 1 {
             if board_arr[index - i * 8] == 0 {
                 moves.push(index - i * 8);
-            }
-            else if board_arr[index - i * 8] < 0 {
+            } else if board_arr[index - i * 8] < 0 {
                 moves.push(index - i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
-    }
-    else {
+    } else {
         //right
         for i in 1..8 - index % 8 {
             if board_arr[index + i] == 0 {
                 moves.push(index + i);
-            }
-            else if board_arr[index + i] > 0 {
+            } else if board_arr[index + i] > 0 {
                 moves.push(index + i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -406,12 +345,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..index % 8 + 1 {
             if board_arr[index - i] == 0 {
                 moves.push(index - i);
-            }
-            else if board_arr[index - i] > 0 {
+            } else if board_arr[index - i] > 0 {
                 moves.push(index - i);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -419,12 +356,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..8 - index / 8 {
             if board_arr[index + i * 8] == 0 {
                 moves.push(index + i * 8);
-            }
-            else if board_arr[index + i * 8] > 0 {
+            } else if board_arr[index + i * 8] > 0 {
                 moves.push(index + i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -432,12 +367,10 @@ pub fn gen_moves_rook(index: usize, board_arr: &Vec<i32>, is_white: bool) -> Vec
         for i in 1..index / 8 + 1 {
             if board_arr[index - i * 8] == 0 {
                 moves.push(index - i * 8);
-            }
-            else if board_arr[index - i * 8] > 0 {
+            } else if board_arr[index - i * 8] > 0 {
                 moves.push(index - i * 8);
                 break;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -496,8 +429,7 @@ pub fn gen_moves_knight(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
                 }
             }
         }
-    }
-    else {
+    } else {
         if index / 8 >= 2 {
             if index % 8 > 0 {
                 if board_arr[index - 17] >= 0 {
@@ -550,7 +482,13 @@ pub fn gen_moves_knight(index: usize, board_arr: &Vec<i32>, is_white: bool) -> V
     return moves;
 }
 
-pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, test_check: bool) -> Vec<usize> {
+pub fn gen_moves_pawn(
+    index: usize,
+    board_arr: &Vec<i32>,
+    is_white: bool,
+    last: &Vec<i32>,
+    test_check: bool,
+) -> Vec<usize> {
     //add en passant
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
@@ -564,21 +502,30 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index - 9);
         }
         if index / 8 == 6 {
-            if board_arr[index - 16] == 0 && board_arr[index - 8] == 0 && !test_check{
+            if board_arr[index - 16] == 0 && board_arr[index - 8] == 0 && !test_check {
                 moves.push(index - 16);
             }
         }
-        if index >= 24 && index < 32 && !test_check{
-            if index % 8 != 0 && board_arr[index - 17] == 0 && last[index - 17] == -6 && board_arr[index - 1] == -6 && last[index - 1] != -6 {
+        if index >= 24 && index < 32 && !test_check {
+            if index % 8 != 0
+                && board_arr[index - 17] == 0
+                && last[index - 17] == -6
+                && board_arr[index - 1] == -6
+                && last[index - 1] != -6
+            {
                 moves.push(index - 9);
             }
-            if index % 8 != 7 && board_arr[index - 15] == 0 && last[index - 15] == -6 && board_arr[index + 1] == -6 && last[index + 1] != -6 {
+            if index % 8 != 7
+                && board_arr[index - 15] == 0
+                && last[index - 15] == -6
+                && board_arr[index + 1] == -6
+                && last[index + 1] != -6
+            {
                 moves.push(index - 7);
             }
         }
-    }
-    else {
-        if board_arr[index + 8] == 0 && !test_check{
+    } else {
+        if board_arr[index + 8] == 0 && !test_check {
             moves.push(index + 8);
         }
         if index % 8 != 0 && board_arr[index + 7] > 0 {
@@ -588,15 +535,25 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
             moves.push(index + 9);
         }
         if index / 8 == 1 {
-            if board_arr[index + 16] == 0 && board_arr[index + 8] == 0 && !test_check{
+            if board_arr[index + 16] == 0 && board_arr[index + 8] == 0 && !test_check {
                 moves.push(index + 16);
             }
         }
-        if index >= 32 && index < 40 && !test_check{
-            if index % 8 != 7 && board_arr[index + 17] == 0 && last[index + 17] == 6 && board_arr[index + 1] == 6 && last[index + 1] != 6 {
+        if index >= 32 && index < 40 && !test_check {
+            if index % 8 != 7
+                && board_arr[index + 17] == 0
+                && last[index + 17] == 6
+                && board_arr[index + 1] == 6
+                && last[index + 1] != 6
+            {
                 moves.push(index + 9);
             }
-            if index % 8 != 0 && board_arr[index + 15] == 0 && last[index + 15] == 6 && board_arr[index - 1] == 6 && last[index - 1] != 6 {
+            if index % 8 != 0
+                && board_arr[index + 15] == 0
+                && last[index + 15] == 6
+                && board_arr[index - 1] == 6
+                && last[index - 1] != 6
+            {
                 moves.push(index + 7);
             }
         }
@@ -604,7 +561,12 @@ pub fn gen_moves_pawn(index: usize, board_arr: &Vec<i32>, is_white: bool, last: 
     return moves;
 }
 
-pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (bool, bool, bool, bool)) -> Vec<usize> {
+pub fn gen_moves_king(
+    index: usize,
+    board_arr: &Vec<i32>,
+    is_white: bool,
+    tup: (bool, bool, bool, bool),
+) -> Vec<usize> {
     let mut moves: Vec<usize> = Vec::new();
     if is_white {
         if index / 8 != 0 {
@@ -648,17 +610,28 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             }
         }
         if tup.0 {
-            if board_arr[59] == 0 && board_arr[58] == 0 && board_arr[57] == 0 && !is_check(board_arr, is_white, &Vec::new(), 59) && !is_check(board_arr, is_white, &Vec::new(), 58) && !is_check(board_arr, is_white, &Vec::new(), 59) && !is_check(board_arr, is_white, &Vec::new(), 60) {
+            if board_arr[59] == 0
+                && board_arr[58] == 0
+                && board_arr[57] == 0
+                && !is_check(board_arr, is_white, &Vec::new(), 59)
+                && !is_check(board_arr, is_white, &Vec::new(), 58)
+                && !is_check(board_arr, is_white, &Vec::new(), 59)
+                && !is_check(board_arr, is_white, &Vec::new(), 60)
+            {
                 moves.push(58);
             }
         }
         if tup.1 {
-            if board_arr[61] == 0 && board_arr[62] == 0 && !is_check(board_arr, is_white, &Vec::new(), 61) && !is_check(board_arr, is_white, &Vec::new(), 60) && !is_check(board_arr, is_white, &Vec::new(), 62) {
+            if board_arr[61] == 0
+                && board_arr[62] == 0
+                && !is_check(board_arr, is_white, &Vec::new(), 61)
+                && !is_check(board_arr, is_white, &Vec::new(), 60)
+                && !is_check(board_arr, is_white, &Vec::new(), 62)
+            {
                 moves.push(62);
             }
         }
-    }
-    else {
+    } else {
         if index / 8 != 0 {
             if board_arr[index - 8] >= 0 {
                 moves.push(index - 8);
@@ -698,19 +671,30 @@ pub fn gen_moves_king(index: usize, board_arr: &Vec<i32>, is_white: bool, tup: (
             if board_arr[index - 1] >= 0 {
                 moves.push(index - 1);
             }
-        } 
+        }
         if tup.2 {
-            if board_arr[1] == 0 && board_arr[2] == 0 && board_arr[3] == 0 && !is_check(board_arr, is_white, &Vec::new(), 2) && !is_check(board_arr, is_white, &Vec::new(), 3) && !is_check(board_arr, is_white, &Vec::new(), 4){
+            if board_arr[1] == 0
+                && board_arr[2] == 0
+                && board_arr[3] == 0
+                && !is_check(board_arr, is_white, &Vec::new(), 2)
+                && !is_check(board_arr, is_white, &Vec::new(), 3)
+                && !is_check(board_arr, is_white, &Vec::new(), 4)
+            {
                 moves.push(2)
             }
         }
         if tup.3 {
-            if board_arr[6] == 0 && board_arr[5] == 0 && !is_check(board_arr, is_white, &Vec::new(), 5) && !is_check(board_arr, is_white, &Vec::new(), 4) && !is_check(board_arr, is_white, &Vec::new(), 6){
+            if board_arr[6] == 0
+                && board_arr[5] == 0
+                && !is_check(board_arr, is_white, &Vec::new(), 5)
+                && !is_check(board_arr, is_white, &Vec::new(), 4)
+                && !is_check(board_arr, is_white, &Vec::new(), 6)
+            {
                 moves.push(6)
             }
         }
     }
-    
+
     return moves;
 }
 
@@ -721,8 +705,7 @@ pub fn king_index(is_white: bool, board_arr: &Vec<i32>) -> usize {
                 return i;
             }
         }
-    }
-    else {
+    } else {
         for i in 0..64 {
             if board_arr[i] == -1 {
                 return i;
@@ -745,8 +728,7 @@ pub fn is_check(board_arr: &Vec<i32>, is_white: bool, last: &Vec<i32>, index: us
                 }
             }
         }
-    }
-    else {
+    } else {
         for i in 0..64 {
             if board_arr[i] >= 1 {
                 moves = gen_moves_not_safe(i, board_arr, last);
@@ -815,7 +797,12 @@ pub fn move_piece(from: usize, to: usize, mut board_arr: Vec<i32>) -> Vec<i32> {
     return board_arr;
 }
 
-pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> bool {
+pub fn is_stalemate(
+    board_arr: Vec<i32>,
+    is_white: bool,
+    last: &Vec<i32>,
+    tup: (bool, bool, bool, bool),
+) -> bool {
     let index = king_index(is_white, &board_arr);
     if gen_moves(index, &board_arr, last, tup).is_empty() {
         let mut moves: Vec<usize>;
@@ -829,8 +816,7 @@ pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (
                 }
             }
             return true;
-        }
-        else {
+        } else {
             for i in 0..64 {
                 if board_arr[i] <= -1 {
                     moves = gen_moves(i, &board_arr, last, tup);
@@ -845,9 +831,15 @@ pub fn is_stalemate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (
     return false;
 }
 
-pub fn is_checkmate(board_arr: Vec<i32>, is_white: bool, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> bool {
+pub fn is_checkmate(
+    board_arr: Vec<i32>,
+    is_white: bool,
+    last: &Vec<i32>,
+    tup: (bool, bool, bool, bool),
+) -> bool {
     let index = king_index(is_white, &board_arr);
-    return is_check(&board_arr, is_white, last, index) && is_stalemate(board_arr, is_white, last, tup);
+    return is_check(&board_arr, is_white, last, index)
+        && is_stalemate(board_arr, is_white, last, tup);
 }
 
 pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -> Vec<usize> {
@@ -869,7 +861,12 @@ pub fn gen_moves_not_safe(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>) -
     return moves;
 }
 
-pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>, tup: (bool, bool, bool, bool)) -> Vec<usize> {
+pub fn gen_moves(
+    index: usize,
+    board_arr: &Vec<i32>,
+    last: &Vec<i32>,
+    tup: (bool, bool, bool, bool),
+) -> Vec<usize> {
     let mut moves = match board_arr[index] {
         1 => gen_moves_king(index, board_arr, true, tup),
         2 => gen_moves_queen(index, board_arr, true),
@@ -900,7 +897,7 @@ pub fn gen_moves(index: usize, board_arr: &Vec<i32>, last: &Vec<i32>, tup: (bool
 pub fn get_mouse_pos() -> usize {
     let mouse_pos = mouse_position();
     if mouse_pos.0 as usize / 100 + mouse_pos.1 as usize / 100 * 8 > 63 {
-        return 63
+        return 63;
     }
     return mouse_pos.0 as usize / 100 + mouse_pos.1 as usize / 100 * 8;
 }
@@ -921,38 +918,94 @@ pub fn copy_image(image: &DynamicImage) -> Image {
     for x in 0..dim.0 {
         for y in 0..dim.1 {
             let pixel = image.get_pixel(x, y);
-            image1.set_pixel(x, y, Color {r: pixel.0[0] as f32 / 255.0, g: pixel.0[1] as f32 / 255.0, b: pixel.0[2] as f32 / 255.0, a: pixel.0[3] as f32 / 255.0})
+            image1.set_pixel(
+                x,
+                y,
+                Color {
+                    r: pixel.0[0] as f32 / 255.0,
+                    g: pixel.0[1] as f32 / 255.0,
+                    b: pixel.0[2] as f32 / 255.0,
+                    a: pixel.0[3] as f32 / 255.0,
+                },
+            )
         }
     }
     return image1;
 }
 //board array, board, king-1, queen-2, rook-3, bishop-4, horse-5, pawn-6. negative for black
-pub fn restart(random: bool) -> (Vec<i32>, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D, Texture2D) {
-    let mut board_arr:Vec<i32> = Vec::new();
+pub fn restart(
+    random: bool,
+) -> (
+    Vec<i32>,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+    Texture2D,
+) {
+    let mut board_arr: Vec<i32> = Vec::new();
     if random {
-        board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
-        board_arr = vec![3, 5, 4, 2, 1, 4, 5, 3, 6, 6, 6, 6, 6, 6 ,6 ,6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6, -6, -6, -6, -6, -6, -6, -6, -3, -5, -4, -2, -1, -4, -5, -3];
+        board_arr = vec![
+            -3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6, -6, -6, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6,
+            6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3,
+        ];
+        board_arr = vec![
+            3, 5, 4, 2, 1, 4, 5, 3, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6, -6, -6, -6, -6, -6, -6,
+            -6, -3, -5, -4, -2, -1, -4, -5, -3,
+        ];
     } else {
-        board_arr = vec![-3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6 ,-6 ,-6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3];
+        board_arr = vec![
+            -3, -5, -4, -2, -1, -4, -5, -3, -6, -6, -6, -6, -6, -6, -6, -6, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6,
+            6, 6, 6, 3, 5, 4, 2, 1, 4, 5, 3,
+        ];
     }
     // let board_arr = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let board = Texture2D::from_file_with_format(include_bytes!("board.png"),None,);
-    let wking = Texture2D::from_file_with_format(include_bytes!("white_king.png"),None,);
-    let wqueen = Texture2D::from_file_with_format(include_bytes!("white_queen.png"),None,);
-    let wrook = Texture2D::from_file_with_format(include_bytes!("white_rook.png"),None,);
-    let wbishop = Texture2D::from_file_with_format(include_bytes!("white_bishop.png"),None,);
-    let wknight = Texture2D::from_file_with_format(include_bytes!("white_knight.png"),None,);
-    let wpawn = Texture2D::from_file_with_format(include_bytes!("white_pawn.png"),None,);
-    let bking = Texture2D::from_file_with_format(include_bytes!("black_king.png"),None,);
-    let bqueen = Texture2D::from_file_with_format(include_bytes!("black_queen.png"),None,);
-    let brook = Texture2D::from_file_with_format(include_bytes!("black_rook.png"),None,);
-    let bbishop = Texture2D::from_file_with_format(include_bytes!("black_bishop.png"),None,);
-    let bknight = Texture2D::from_file_with_format(include_bytes!("black_knight.png"),None,);
-    let bpawn = Texture2D::from_file_with_format(include_bytes!("black_pawn.png"),None,);
-    return (board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook, bbishop, bknight, bpawn);
+    let board = Texture2D::from_file_with_format(include_bytes!("board.png"), None);
+    let wking = Texture2D::from_file_with_format(include_bytes!("white_king.png"), None);
+    let wqueen = Texture2D::from_file_with_format(include_bytes!("white_queen.png"), None);
+    let wrook = Texture2D::from_file_with_format(include_bytes!("white_rook.png"), None);
+    let wbishop = Texture2D::from_file_with_format(include_bytes!("white_bishop.png"), None);
+    let wknight = Texture2D::from_file_with_format(include_bytes!("white_knight.png"), None);
+    let wpawn = Texture2D::from_file_with_format(include_bytes!("white_pawn.png"), None);
+    let bking = Texture2D::from_file_with_format(include_bytes!("black_king.png"), None);
+    let bqueen = Texture2D::from_file_with_format(include_bytes!("black_queen.png"), None);
+    let brook = Texture2D::from_file_with_format(include_bytes!("black_rook.png"), None);
+    let bbishop = Texture2D::from_file_with_format(include_bytes!("black_bishop.png"), None);
+    let bknight = Texture2D::from_file_with_format(include_bytes!("black_knight.png"), None);
+    let bpawn = Texture2D::from_file_with_format(include_bytes!("black_pawn.png"), None);
+    return (
+        board_arr, board, wking, wqueen, wrook, wbishop, wknight, wpawn, bking, bqueen, brook,
+        bbishop, bknight, bpawn,
+    );
 }
 
-pub fn draw_board(board_arr: &Vec<i32>, board: Texture2D, wking: Texture2D, wqueen: Texture2D, wrook: Texture2D, wbishop: Texture2D, wknight: Texture2D, wpawn: Texture2D, bking: Texture2D, bqueen: Texture2D, brook: Texture2D, bbishop: Texture2D, bknight: Texture2D, bpawn: Texture2D) {
+pub fn draw_board(
+    board_arr: &Vec<i32>,
+    board: Texture2D,
+    wking: Texture2D,
+    wqueen: Texture2D,
+    wrook: Texture2D,
+    wbishop: Texture2D,
+    wknight: Texture2D,
+    wpawn: Texture2D,
+    bking: Texture2D,
+    bqueen: Texture2D,
+    brook: Texture2D,
+    bbishop: Texture2D,
+    bknight: Texture2D,
+    bpawn: Texture2D,
+) {
     draw_texture(board, 0.0, 0.0, WHITE);
     for i in 0..board_arr.len() {
         match board_arr[i] {
@@ -976,20 +1029,69 @@ pub fn draw_board(board_arr: &Vec<i32>, board: Texture2D, wking: Texture2D, wque
 pub fn draw_move(moves: Vec<usize>, board_arr: &Vec<i32>) {
     for i in moves {
         if board_arr[i] == 0 {
-            draw_circle(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 20.0, Color{r: 0.4, g: 0.4, b: 0.4, a: 0.5});
-        }
-        else{
+            draw_circle(
+                50.0 + (i % 8 * 100) as f32,
+                50.0 + (i / 8 * 100) as f32,
+                20.0,
+                Color {
+                    r: 0.4,
+                    g: 0.4,
+                    b: 0.4,
+                    a: 0.5,
+                },
+            );
+        } else {
             if board_arr[i] == -1 || board_arr[i] == 1 {
-                draw_circle_lines(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 49.0, 7.0, RED);
-            }
-            else {
-                draw_circle_lines(50.0 + (i % 8 * 100) as f32, 50.0 + (i / 8 * 100) as f32, 49.0, 7.0, Color{r: 0.4, g: 0.4, b: 0.4, a: 0.5});
+                draw_circle_lines(
+                    50.0 + (i % 8 * 100) as f32,
+                    50.0 + (i / 8 * 100) as f32,
+                    49.0,
+                    7.0,
+                    RED,
+                );
+            } else {
+                draw_circle_lines(
+                    50.0 + (i % 8 * 100) as f32,
+                    50.0 + (i / 8 * 100) as f32,
+                    49.0,
+                    7.0,
+                    Color {
+                        r: 0.4,
+                        g: 0.4,
+                        b: 0.4,
+                        a: 0.5,
+                    },
+                );
             }
         }
     }
 }
 
-pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_turn: bool, mut is_pressed: bool, mut found: bool, mut moves: Vec<usize>, mut chosen: usize, mut rep: i32, mut save: Vec<Vec<i32>>, mut tup: (bool, bool, bool, bool), mut counter: i32) -> (Vec<i32>, Vec<i32>, bool, bool, bool, Vec<usize>, usize, i32, Vec<Vec<i32>>, (bool, bool, bool, bool), i32) {
+pub fn player_turn2(
+    mut board_arr: Vec<i32>,
+    mut last: Vec<i32>,
+    mut is_white_turn: bool,
+    mut is_pressed: bool,
+    mut found: bool,
+    mut moves: Vec<usize>,
+    mut chosen: usize,
+    mut rep: i32,
+    mut save: Vec<Vec<i32>>,
+    mut tup: (bool, bool, bool, bool),
+    mut counter: i32,
+) -> (
+    Vec<i32>,
+    Vec<i32>,
+    bool,
+    bool,
+    bool,
+    Vec<usize>,
+    usize,
+    i32,
+    Vec<Vec<i32>>,
+    (bool, bool, bool, bool),
+    i32,
+) {
     if is_pressed {
         let pos = get_mouse_pos();
         for i in moves.clone() {
@@ -997,9 +1099,8 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
                 last = board_arr.clone();
                 if board_arr[chosen] == 6 || board_arr[chosen] == -6 || board_arr[pos] != 0 {
                     counter = 0;
-                }
-                else {
-                    if !is_white_turn{
+                } else {
+                    if !is_white_turn {
                         counter += 1;
                     }
                 }
@@ -1021,8 +1122,7 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
                             tup.1 = false;
                         }
                     }
-                }
-                else {
+                } else {
                     if tup.2 == true || tup.3 == true {
                         if chosen == 4 {
                             tup.2 = false;
@@ -1044,8 +1144,7 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
                 if save.len() > 4 && !is_white_turn {
                     if board_arr == save[save.len() - 5] {
                         rep += 1;
-                    }
-                    else {
+                    } else {
                         rep = 0;
                     }
                 }
@@ -1057,8 +1156,7 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
             found = false;
             is_pressed = false;
             is_white_turn = !is_white_turn;
-        }
-        else {            
+        } else {
             moves = Vec::new();
             is_pressed = false;
             if (board_arr[pos] > 0) == is_white_turn {
@@ -1068,8 +1166,7 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
                 is_pressed = true;
             }
         }
-    }
-    else {
+    } else {
         let pos = get_mouse_pos();
         if (board_arr[pos] > 0) == is_white_turn {
             chosen = pos;
@@ -1077,7 +1174,19 @@ pub fn player_turn2(mut board_arr: Vec<i32>, mut last: Vec<i32>, mut is_white_tu
             is_pressed = true;
         }
     }
-    return (board_arr, last, is_white_turn, is_pressed, found, moves, chosen, rep, save, tup, counter);
+    return (
+        board_arr,
+        last,
+        is_white_turn,
+        is_pressed,
+        found,
+        moves,
+        chosen,
+        rep,
+        save,
+        tup,
+        counter,
+    );
 }
 
 pub fn is_insufficient(board_arr: &Vec<i32>) -> bool {
@@ -1085,19 +1194,19 @@ pub fn is_insufficient(board_arr: &Vec<i32>) -> bool {
     let mut black = false;
     let tup_white = count_pieces(board_arr, true);
     let tup_black = count_pieces(board_arr, false);
-    if tup_white.2 == 1 || tup_white.3 ==1 {
+    if tup_white.2 == 1 || tup_white.3 == 1 {
         white = true;
     }
-    if tup_white.2 == 1 && tup_white.3 ==1 {
+    if tup_white.2 == 1 && tup_white.3 == 1 {
         white = false;
     }
     if tup_white.0 > 0 || tup_white.1 > 0 || tup_white.4 > 0 {
         white = false;
     }
-    if tup_black.2 == 1 || tup_black.3 ==1 {
+    if tup_black.2 == 1 || tup_black.3 == 1 {
         black = true;
     }
-    if tup_black.2 == 1 && tup_black.3 ==1 {
+    if tup_black.2 == 1 && tup_black.3 == 1 {
         black = false;
     }
     if tup_black.0 > 0 || tup_black.1 > 0 || tup_black.4 > 0 {
@@ -1109,7 +1218,7 @@ pub fn is_insufficient(board_arr: &Vec<i32>) -> bool {
 pub fn count_pieces(board_arr: &Vec<i32>, is_white: bool) -> (i32, i32, i32, i32, i32) {
     let mut tup = (0, 0, 0, 0, 0);
     if is_white {
-        for i in board_arr{
+        for i in board_arr {
             if i == &2 {
                 tup.0 += 1;
             }
@@ -1126,9 +1235,8 @@ pub fn count_pieces(board_arr: &Vec<i32>, is_white: bool) -> (i32, i32, i32, i32
                 tup.4 += 1;
             }
         }
-    }
-    else {
-        for i in board_arr{
+    } else {
+        for i in board_arr {
             if i == &-2 {
                 tup.0 += 1;
             }
