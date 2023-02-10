@@ -1,4 +1,5 @@
-use rand::{prelude::*};
+#![allow(dead_code)]
+use rand::prelude::*;
 use std::f32::{MIN, MAX};
 #[derive(Debug)]
 pub struct Neuron {
@@ -16,8 +17,7 @@ pub enum Activation {
     Sigmoid,
     Tanh,
     Softmax,
-    Leaky_relu,
-
+    LeakyRelu,
 }
 
 impl Activation {
@@ -28,17 +28,17 @@ impl Activation {
             Self::Sigmoid => todo!(),
             Self::Tanh => todo!(),
             Self::Softmax => todo!(),
-            Self::Leaky_relu => todo!(),
+            Self::LeakyRelu => todo!(),
         }
     }
     pub fn as_derivative(self) -> fn(f32) -> f32 {
         match self {
-            Self::Linear => |x| 1.0,
+            Self::Linear => |_| 1.0,
             Self::Relu => |x| if x < 0.0 {0.0} else {1.0},
             Self::Sigmoid => todo!(),
             Self::Tanh => todo!(),
             Self::Softmax => todo!(),
-            Self::Leaky_relu => todo!(),
+            Self::LeakyRelu => todo!(),
         }
     }
 }
@@ -69,14 +69,14 @@ pub enum Loss {
 }
 
 impl Loss {
-    pub fn as_fn(self) -> fn(f32) -> f32 {
+    pub fn as_fn(self) -> fn(Vec<f32>, Vec<f32>) -> f32 {
         match self {
             Self::MSE => todo!(),
             Self::BCE => todo!(),
             Self::CCE => todo!(),
         }
     }
-    pub fn as_derivative(self) -> fn(f32) -> f32 {
+    pub fn as_derivative(self) -> fn(f32, f32) -> f32 {
         match self {
             Self::MSE => todo!(),
             Self::BCE => todo!(),
@@ -89,11 +89,12 @@ impl Loss {
 pub struct Network {
     pub neurons: Vec<Vec<Neuron>>,//vector of layers
     pub learning_rate: f32,
+    pub loss: Loss,
     //ouput activation!
 }
 
 impl Network {
-    pub fn new(size: Vec<usize>, lr: f32, activations: Vec<Activation>) -> Network {
+    pub fn new(size: Vec<usize>, lr: f32, activations: Vec<Activation>, loss: Loss) -> Network {
         let mut neurons: Vec<Vec<Neuron>> = Vec::new();
         let mut layer_index = size.len();
         let mut next = 0;
@@ -107,7 +108,7 @@ impl Network {
             neurons.push(layer1);
         }
         neurons.reverse();
-        return Network {neurons: neurons, learning_rate: lr};
+        return Network {neurons: neurons, learning_rate: lr, loss: loss};
     }
 
     pub fn predict(&mut self, inputs: Vec<f32>) -> Option<Vec<f32>> {
@@ -204,5 +205,12 @@ impl Network {
             output.push((i - min)/(max - min));
         }
         return output;
+    }
+
+    pub fn save(path: &str) {
+        todo!()
+    }
+    pub fn load(path: &str) -> Network {
+        todo!()
     }
 }
