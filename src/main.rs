@@ -23,7 +23,7 @@ fn main() {
     // let data = fs::read_to_string(r"src\etai\test.et").unwrap();
     // println!("{:?}", etai::lexer::tokenize(data));
 
-    let mut n = neural_network::neurons::Network::load(r"src\neural_network\addition.et");
+    let mut n = neural_network::neurons::Network::load(r"src/neural_network/addition.et");
     n.summary();
     // println!("{:?}", n);
 
