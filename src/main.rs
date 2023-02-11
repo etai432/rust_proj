@@ -1,4 +1,4 @@
-use rand::prelude::*;
+// use rand::prelude::*;
 // use std::fs;
 // mod game_of_life;
 // use game_of_life::game;
@@ -15,8 +15,8 @@ use rand::prelude::*;
 // mod ray_tracer;
 // use ray_tracer::screen::run;
 mod neural_network;
-use neural_network::neurons::Activation;
-use neural_network::neurons::Loss;
+// use neural_network::neurons::Activation;
+// use neural_network::neurons::Loss;
 // mod etai;
 
 fn main() {

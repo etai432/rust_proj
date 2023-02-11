@@ -416,7 +416,7 @@ impl Network {
     }
 
     pub fn load(path: &str) -> Network {
-        let mut data = fs::read_to_string(path).unwrap();
+        let data = fs::read_to_string(path).unwrap();
         let mut data = data.split("\n").collect::<Vec<&str>>();
         let structure = serde_json::from_str::<Vec<usize>>(data.remove(0)).unwrap();
         let activations = serde_json::from_str::<Vec<&str>>(data.remove(0))
