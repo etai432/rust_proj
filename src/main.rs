@@ -24,6 +24,7 @@ fn main() {
     // println!("{:?}", etai::lexer::tokenize(data));
 
     let mut n = neural_network::neurons::Network::load(r"src\neural_network\addition.et");
+    n.summary();
     // println!("{:?}", n);
 
     // let mut n = neural_network::neurons::Network::new(
@@ -32,13 +33,16 @@ fn main() {
     //     vec![Activation::Linear, Activation::Linear, Activation::Linear],
     //     Loss::MSE,
     // );
-    // let mut rng = rand::thread_rng();
+    let mut rng = rand::thread_rng();
     // for i in 0..100 {
-    //     let x: Vec<Vec<f32>> = (0..100)
-    //         .map(|_| vec![rng.gen_range(0..1000) as f32, rng.gen_range(0..1000) as f32])
-    //         .collect();
-    //     let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
-    //     println!("avg loss: {}", n.fit(x, y));
+    let x: Vec<Vec<f32>> = (0..100)
+        .map(|_| vec![rng.gen_range(0..1000) as f32, rng.gen_range(0..1000) as f32])
+        .collect();
+    let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
+    // println!("{:?}", n.eval(x, y));
+    n.best_lr(x, y);
+    println!("{:?}", n);
+    // println!("avg loss: {}", n.fit(x, y));
     // }
     println!(
         "prediction: {}, result: {}",

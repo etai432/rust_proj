@@ -1,4 +1,6 @@
 #![allow(dead_code)]
+use core::f32;
+use macroquad::ui::widgets::Label;
 use rand::prelude::*;
 use std::f32::{MAX, MIN};
 use std::fmt::format;
@@ -95,14 +97,19 @@ pub enum Loss {
 impl Loss {
     pub fn as_fn(self) -> fn(Vec<f32>, Vec<f32>) -> f32 {
         match self {
-            Self::MSE => todo!(),
+            Self::MSE => |label, prediction| {
+                (0..label.len())
+                    .map(|i| (label[i] - prediction[i]).powf(2.0))
+                    .sum::<f32>()
+                    / label.len() as f32
+            },
             Self::BCE => todo!(),
             Self::CCE => todo!(),
         }
     }
     pub fn as_derivative(self) -> fn(f32, f32) -> f32 {
         match self {
-            Self::MSE => todo!(),
+            Self::MSE => |prediction, label| 2.0 * (prediction - label),
             Self::BCE => todo!(),
             Self::CCE => todo!(),
         }
@@ -160,6 +167,39 @@ impl Network {
         };
     }
 
+    pub fn best_lr(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) {
+        let weights = self
+            .neurons
+            .iter()
+            .map(|vec| {
+                vec.iter()
+                    .map(|neuron| neuron.weights.clone())
+                    .collect::<Vec<Vec<f32>>>()
+            })
+            .collect::<Vec<Vec<Vec<f32>>>>();
+        let biases = self
+            .neurons
+            .iter()
+            .map(|vec| vec.iter().map(|neuron| neuron.bias).collect::<Vec<f32>>())
+            .collect::<Vec<Vec<f32>>>();
+        self.learning_rate = 1.0;
+        self.fit(inputs.clone(), labels.clone());
+        while self.neurons[0][0].weights[0].is_nan() {
+            self.learning_rate /= 10.0;
+            for layer in 0..self.neurons.len() {
+                for neuron in 0..self.neurons[layer].len() {
+                    self.neurons[layer][neuron].weights = weights[layer][neuron].clone();
+                }
+            }
+            for layer in 0..self.neurons.len() {
+                for neuron in 0..self.neurons[layer].len() {
+                    self.neurons[layer][neuron].bias = biases[layer][neuron];
+                }
+            }
+            self.fit(inputs.clone(), labels.clone());
+        }
+    }
+
     pub fn predict(&mut self, inputs: Vec<f32>) -> Option<Vec<f32>> {
         if inputs.len() != self.neurons[0].len() {
             return None;
@@ -201,7 +241,7 @@ impl Network {
             let prediction = self.predict(inputs[i].clone()).unwrap();
             let mut changes = vec![0.0; prediction.len()];
             for j in 0..prediction.len() {
-                changes[j] = labels[i][j] - prediction[j];
+                changes[j] = self.loss.as_derivative()(prediction[j], labels[i][j]);
             }
             avg_loss += self.loss(labels[i].clone(), prediction);
 
@@ -209,7 +249,7 @@ impl Network {
                 let mut new_changes = vec![0.0; self.neurons[layer - 1].len()];
                 for neuron in 0..self.neurons[layer].len() {
                     for bf_neuron in 0..self.neurons[layer - 1].len() {
-                        self.neurons[layer - 1][bf_neuron].weights[neuron] += self.learning_rate
+                        self.neurons[layer - 1][bf_neuron].weights[neuron] -= self.learning_rate
                             * self.neurons[layer - 1][bf_neuron].value
                             * changes[neuron]
                             * self.neurons[layer - 1][bf_neuron].derivative();
@@ -226,34 +266,96 @@ impl Network {
         avg_loss / inputs.len() as f32
     }
 
-    pub fn eval(inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> (f32, f32) {
-        //returns accuracy and loss
-        todo!()
+    pub fn eval(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> (f32, Option<f32>) {
+        let predictions = (0..inputs.len())
+            .map(|i| self.predict(inputs[i].clone()).unwrap())
+            .collect::<Vec<Vec<f32>>>();
+        let avg_loss = (0..predictions.len())
+            .map(|i| self.loss(labels[i].clone(), predictions[i].clone()))
+            .sum::<f32>()
+            / predictions.len() as f32;
+        if self.loss.to_string() == "MSE".to_string() {
+            return (avg_loss, None);
+        }
+        todo!("implement finding accuracy for classifications");
     }
 
     pub fn loss(&self, label: Vec<f32>, prediction: Vec<f32>) -> f32 {
-        //mse
-        let mut diff: Vec<f32> = (0..label.len()).map(|i| label[i] - prediction[i]).collect();
-        diff = (0..diff.len()).map(|i| diff[i].powf(2.0)).collect();
-        return diff.iter().copied().sum::<f32>() / diff.len() as f32;
+        self.loss.as_fn()(label, prediction)
     }
 
     fn error(&self, label: Vec<f32>, prediction: Vec<f32>) -> Vec<f32> {
         return (0..label.len()).map(|i| label[i] - prediction[i]).collect();
     }
 
-    fn cost(&self, label: Vec<f32>, prediction: Vec<f32>) -> f32 {
-        //mse
-        let mut diff: Vec<f32> = (0..label.len()).map(|i| label[i] - prediction[i]).collect();
-        diff = (0..diff.len()).map(|i| diff[i].powf(2.0)).collect();
-        return diff.iter().copied().sum::<f32>();
+    pub fn summary(&self) {
+        let mut params = (0..self.neurons.len() - 1)
+            .map(|layer| self.neurons[layer].len() * (self.neurons[layer + 1].len() + 1))
+            .collect::<Vec<usize>>();
+        params.push(self.neurons[self.neurons.len() - 1].len());
+        let line = 60;
+        println!("model summary:");
+        (0..line).for_each(|_| print!("-"));
+        let spacing = line / 3;
+        let placings = vec![18, 36, 54];
+        println!();
+        self.print_layer("layer", "neurons#", "activation", "param#", &placings);
+        println!();
+        (0..line).for_each(|_| print!("="));
+        println!();
+        self.print_layer(
+            "input",
+            self.neurons[0].len().to_string().as_str(),
+            self.neurons[0][0].activation.to_string().as_str(),
+            params[0].to_string().as_str(),
+            &placings,
+        );
+        for layer in 1..self.neurons.len() - 1 {
+            println!("\n");
+            self.print_layer(
+                &format!("hidden {}", layer),
+                self.neurons[layer].len().to_string().as_str(),
+                self.neurons[layer][0].activation.to_string().as_str(),
+                params[layer].to_string().as_str(),
+                &placings,
+            );
+        }
+        println!("\n");
+        self.print_layer(
+            "output",
+            self.neurons[self.neurons.len() - 1]
+                .len()
+                .to_string()
+                .as_str(),
+            self.neurons[self.neurons.len() - 1][0]
+                .activation
+                .to_string()
+                .as_str(),
+            params[self.neurons.len() - 1].to_string().as_str(),
+            &placings,
+        );
+        println!();
+        (0..line).for_each(|_| print!("="));
+        println!();
+        println!("total params: {}", params.into_iter().sum::<usize>());
+        (0..line).for_each(|_| print!("-"));
+        println!();
+    }
+    fn print_layer(&self, layer: &str, neurons: &str, act: &str, param: &str, pl: &Vec<usize>) {
+        let mut place = 0;
+        print!("{}", layer);
+        place += layer.len();
+        (0..pl[0] - place).for_each(|_| print!(" "));
+        print!("{}", neurons);
+        place = pl[0] + neurons.len();
+        (0..pl[1] - place).for_each(|_| print!(" "));
+        print!("{}", act);
+        place = pl[1] + act.len();
+        (0..pl[2] - place).for_each(|_| print!(" "));
+        print!("{}", param);
     }
 
-    pub fn summery() -> String {
-        todo!()
-    }
-
-    pub fn normalize(input: Vec<f32>) -> Vec<f32> {
+    pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
         let mut min = MAX;
         let mut max = MIN;
         for i in input.iter().copied() {
