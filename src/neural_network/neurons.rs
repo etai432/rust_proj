@@ -1,9 +1,7 @@
 #![allow(dead_code)]
 use core::f32;
-use macroquad::ui::widgets::Label;
 use rand::prelude::*;
 use std::f32::{MAX, MIN};
-use std::fmt::format;
 use std::fs;
 use std::io::prelude::*;
 #[derive(Debug)]
@@ -296,7 +294,6 @@ impl Network {
         let line = 60;
         println!("model summary:");
         (0..line).for_each(|_| print!("-"));
-        let spacing = line / 3;
         let placings = vec![18, 36, 54];
         println!();
         self.print_layer("layer", "neurons#", "activation", "param#", &placings);

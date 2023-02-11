@@ -33,16 +33,13 @@ fn main() {
     //     vec![Activation::Linear, Activation::Linear, Activation::Linear],
     //     Loss::MSE,
     // );
-    let mut rng = rand::thread_rng();
+    // let mut rng = rand::thread_rng();
     // for i in 0..100 {
-    let x: Vec<Vec<f32>> = (0..100)
-        .map(|_| vec![rng.gen_range(0..1000) as f32, rng.gen_range(0..1000) as f32])
-        .collect();
-    let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
-    // println!("{:?}", n.eval(x, y));
-    n.best_lr(x, y);
-    println!("{:?}", n);
-    // println!("avg loss: {}", n.fit(x, y));
+    //     let x: Vec<Vec<f32>> = (0..100)
+    //         .map(|_| vec![rng.gen_range(0..1000) as f32, rng.gen_range(0..1000) as f32])
+    //         .collect();
+    //     let y: Vec<Vec<f32>> = (0..100).map(|i| vec![x[i][0] + x[i][1]]).collect();
+    //     println!("avg loss: {}", n.fit(x, y));
     // }
     println!(
         "prediction: {}, result: {}",
