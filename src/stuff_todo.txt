@@ -1,11 +1,7 @@
-Stuff I should do with rust:
-9. later - unsafe and async rust books
-10. later .csv/image manipulation crate
+finish NN
 json
 rust iter functions
-
-impossible ass projects:
-writing a simple raytracer - done for now, can get better
-build a neural netowrk
-Create a scripting language using Rust
-build a simple kernel
+Create a scripting language using Rust - crafting interpreters book
+build a simple kernel - elbit course
+unsafe and async rust books
+image manipulation crate
