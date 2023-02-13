@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 use core::f32;
 use rand::prelude::*;
-use std::f32::{MAX, MIN};
+use std::f32::{consts::E, MAX, MIN};
 use std::fs;
 use std::io::prelude::*;
 #[derive(Debug)]
@@ -30,7 +30,7 @@ impl Activation {
             Self::Relu => |x| x.max(0.0),
             Self::Sigmoid => todo!(),
             Self::Tanh => todo!(),
-            Self::Softmax => todo!(),
+            Self::Softmax => |x| E.powf(x),
             Self::LeakyRelu => todo!(),
         }
     }
@@ -40,7 +40,7 @@ impl Activation {
             Self::Relu => |x| if x < 0.0 { 0.0 } else { 1.0 },
             Self::Sigmoid => todo!(),
             Self::Tanh => todo!(),
-            Self::Softmax => todo!(),
+            Self::Softmax => |x| x * (1.0 - x),
             Self::LeakyRelu => todo!(),
         }
     }
@@ -77,8 +77,13 @@ impl Neuron {
             activation: activation,
         }
     }
-    pub fn activate(&mut self) {
-        self.value = self.activation.as_fn()(self.value)
+    pub fn activate(&mut self, sum: Option<f32>) {
+        if self.activation.to_string() == "Softmax".to_string() {
+            println!("{}", sum.unwrap());
+            self.value = self.activation.as_fn()(self.value) / sum.unwrap(); // sum is sum(e^every_value)
+        } else {
+            self.value = self.activation.as_fn()(self.value)
+        }
     }
     pub fn derivative(&self) -> f32 {
         self.activation.as_derivative()(self.value)
@@ -204,7 +209,12 @@ impl Network {
         }
         for i in 0..inputs.len() {
             self.neurons[0][i].value = inputs[i];
-            self.neurons[0][i].activate()
+            if self.neurons[0][i].activation.to_string() == "Softmax".to_string() {
+                let sum1 = self.softmax_sum(0);
+                self.neurons[0][i].activate(Some(sum1))
+            } else {
+                self.neurons[0][i].activate(None)
+            }
         }
         for layer in 1..self.neurons.len() {
             for neuron in 0..self.neurons[layer].len() {
@@ -227,7 +237,12 @@ impl Network {
                 self.neurons[place.0 - 1][i].value * self.neurons[place.0 - 1][i].weights[place.1]
         }
         self.neurons[place.0][place.1].value = sum + self.neurons[place.0][place.1].bias;
-        self.neurons[place.0][place.1].activate();
+        if self.neurons[place.0][place.1].activation.to_string() == "Softmax".to_string() {
+            let sum1 = self.softmax_sum(place.0);
+            self.neurons[place.0][place.1].activate(Some(sum1))
+        } else {
+            self.neurons[place.0][place.1].activate(None)
+        }
     }
 
     pub fn fit(&mut self, inputs: Vec<Vec<f32>>, labels: Vec<Vec<f32>>) -> f32 {
@@ -350,6 +365,15 @@ impl Network {
         place = pl[1] + act.len();
         (0..pl[2] - place).for_each(|_| print!(" "));
         print!("{}", param);
+    }
+
+    fn softmax_sum(&self, layer: usize) -> f32 {
+        let mut sum = 0.0;
+        for neuron in &self.neurons[layer] {
+            sum += E.powf(neuron.value);
+            println!("{}", neuron.value);
+        }
+        sum
     }
 
     pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
