@@ -28,20 +28,20 @@ impl Activation {
         match self {
             Self::Linear => |x| x,
             Self::Relu => |x| x.max(0.0),
-            Self::Sigmoid => todo!(),
-            Self::Tanh => todo!(),
+            Self::Sigmoid => |x| 1.0 / (1.0 + E.powf(-x)),
+            Self::Tanh => |x| (E.powf(x) - E.powf(-x)) / (E.powf(x) + E.powf(x)),
             Self::Softmax => |x| E.powf(x),
-            Self::LeakyRelu => todo!(),
+            Self::LeakyRelu => |x| x.max(0.01 * x),
         }
     }
     pub fn as_derivative(self) -> fn(f32) -> f32 {
         match self {
             Self::Linear => |_| 1.0,
             Self::Relu => |x| if x < 0.0 { 0.0 } else { 1.0 },
-            Self::Sigmoid => todo!(),
-            Self::Tanh => todo!(),
-            Self::Softmax => |x| x * (1.0 - x),
-            Self::LeakyRelu => todo!(),
+            Self::Sigmoid => |x| x * (1.0 - x),
+            Self::Tanh => |x| 1.0 - x * x,
+            Self::Softmax => |x| x * (1.0 - x), //might be wrong
+            Self::LeakyRelu => |x| if x < 0.0 { 0.01 } else { 1.0 },
         }
     }
     pub fn from_str(s: &str) -> Self {
