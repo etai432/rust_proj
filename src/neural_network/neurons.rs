@@ -377,6 +377,15 @@ impl Network {
         sum
     }
 
+    pub fn test_train_split(
+        &self,
+        per: f32,
+        inputs: Vec<Vec<f32>>,
+        labels: Vec<Vec<f32>>,
+    ) -> (Vec<Vec<f32>>, Vec<Vec<f32>>) {
+        todo!()
+    }
+
     pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
         let mut min = MAX;
         let mut max = MIN;
