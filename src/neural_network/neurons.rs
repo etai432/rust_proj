@@ -352,6 +352,10 @@ impl Network {
         print!("{}", param);
     }
 
+    pub fn test_train_split(&self, per: f32) {
+        todo!("test train split")
+    }
+
     pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
         let mut min = MAX;
         let mut max = MIN;
