@@ -353,6 +353,7 @@ impl Network {
         (0..line).for_each(|_| print!("-"));
         println!();
     }
+
     fn print_layer(&self, layer: &str, neurons: &str, act: &str, param: &str, pl: &Vec<usize>) {
         let mut place = 0;
         print!("{}", layer);
