@@ -386,6 +386,10 @@ impl Network {
         todo!()
     }
 
+    pub fn read_csv(&self, path: &str, label_index: usize) -> (Vec<Vec<f32>>, Vec<Vec<f32>>) {
+        todo!()
+    }
+
     pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
         let mut min = MAX;
         let mut max = MIN;

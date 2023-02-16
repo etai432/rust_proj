@@ -20,8 +20,12 @@ mod neural_network;
 // mod etai;
 
 fn main() {
-    // let data = fs::read_to_string(r"src\etai\test.et").unwrap();
-    // println!("{:?}", etai::lexer::tokenize(data));
+    let mut rdr = csv::Reader::from_path("src/neural_network/mnist_train.csv").unwrap();
+
+    for result in rdr.records() {
+        let record = result.unwrap();
+        println!("{:?}", record.len());
+    }
 
     let mut n = neural_network::neurons::Network::load(r"src/neural_network/addition.et");
     n.summary();
@@ -48,6 +52,10 @@ fn main() {
     );
 
     // n.save(r"src\neural_network\addition.et");
+    // let data = fs::read_to_string(r"src\etai\test.et").unwrap();
+    // println!("{:?}", etai::lexer::tokenize(data));
+
+    // n.save(r"src\neural_network\mnist.et");
     // println!("{:?}", n);
     // chess_pvp();
 }
