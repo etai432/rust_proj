@@ -223,6 +223,7 @@ impl Network {
 
     pub fn predict(&mut self, inputs: Vec<f32>) -> Option<Vec<f32>> {
         if inputs.len() != self.neurons[0].len() {
+            println!("input doesnt match first layer");
             return None;
         }
         for i in 0..inputs.len() {
