@@ -20,13 +20,6 @@ mod neural_network;
 // mod etai;
 
 fn main() {
-    let mut rdr = csv::Reader::from_path("src/neural_network/mnist_train.csv").unwrap();
-
-    for result in rdr.records() {
-        let record = result.unwrap();
-        println!("{:?}", record.len());
-    }
-
     let mut n = neural_network::neurons::Network::load(r"src/neural_network/addition.et");
     n.summary();
     // println!("{:?}", n);

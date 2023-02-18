@@ -4,6 +4,8 @@ use rand::prelude::*;
 use std::f32::{consts::E, MAX, MIN};
 use std::fs;
 use std::io::prelude::*;
+use std::path::Path;
+
 #[derive(Debug)]
 pub struct Neuron {
     pub bias: f32,
@@ -11,6 +13,28 @@ pub struct Neuron {
     pub value: f32,
     pub place: (usize, usize), //layer, index in layer
     pub activation: Activation,
+}
+
+impl Neuron {
+    pub fn new(len: usize, place: (usize, usize), activation: Activation) -> Neuron {
+        Neuron {
+            bias: rand::thread_rng().gen(),
+            weights: (0..len).map(|_| rand::thread_rng().gen()).collect(),
+            value: 0.0,
+            place: place,
+            activation: activation,
+        }
+    }
+    pub fn activate(&mut self, sum: Option<f32>) {
+        if self.activation.to_string() == "Softmax".to_string() {
+            self.value = self.activation.as_fn()(self.value) / sum.unwrap(); // sum is sum(e^every_value)
+        } else {
+            self.value = self.activation.as_fn()(self.value)
+        }
+    }
+    pub fn derivative(&self) -> f32 {
+        self.activation.as_derivative()(self.value)
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -64,29 +88,6 @@ impl Activation {
             Self::Softmax => "Softmax".to_string(),
             Self::LeakyRelu => "LeakyRelu".to_string(),
         }
-    }
-}
-
-impl Neuron {
-    pub fn new(len: usize, place: (usize, usize), activation: Activation) -> Neuron {
-        Neuron {
-            bias: rand::thread_rng().gen(),
-            weights: (0..len).map(|_| rand::thread_rng().gen()).collect(),
-            value: 0.0,
-            place: place,
-            activation: activation,
-        }
-    }
-    pub fn activate(&mut self, sum: Option<f32>) {
-        if self.activation.to_string() == "Softmax".to_string() {
-            println!("{}", sum.unwrap());
-            self.value = self.activation.as_fn()(self.value) / sum.unwrap(); // sum is sum(e^every_value)
-        } else {
-            self.value = self.activation.as_fn()(self.value)
-        }
-    }
-    pub fn derivative(&self) -> f32 {
-        self.activation.as_derivative()(self.value)
     }
 }
 
@@ -187,8 +188,9 @@ impl Network {
             .collect::<Vec<Vec<f32>>>();
         self.learning_rate = 1.0;
         self.fit(inputs.clone(), labels.clone());
-        while self.neurons[0][0].weights[0].is_nan() {
+        while self.any_nan() {
             self.learning_rate /= 10.0;
+            // println!("testing learning rate: {}", self.learning_rate);
             for layer in 0..self.neurons.len() {
                 for neuron in 0..self.neurons[layer].len() {
                     self.neurons[layer][neuron].weights = weights[layer][neuron].clone();
@@ -201,6 +203,22 @@ impl Network {
             }
             self.fit(inputs.clone(), labels.clone());
         }
+    }
+
+    fn any_nan(&self) -> bool {
+        for layer in 0..self.neurons.len() {
+            for neuron in 0..self.neurons[layer].len() {
+                if self.neurons[layer][neuron].bias.is_nan() {
+                    return true;
+                }
+                for weight in 0..self.neurons[layer][neuron].weights.len() {
+                    if self.neurons[layer][neuron].weights[weight].is_nan() {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 
     pub fn predict(&mut self, inputs: Vec<f32>) -> Option<Vec<f32>> {
@@ -372,13 +390,11 @@ impl Network {
         let mut sum = 0.0;
         for neuron in &self.neurons[layer] {
             sum += E.powf(neuron.value);
-            println!("{}", neuron.value);
         }
         sum
     }
 
     pub fn test_train_split(
-        &self,
         per: f32,
         inputs: Vec<Vec<f32>>,
         labels: Vec<Vec<f32>>,
@@ -386,11 +402,36 @@ impl Network {
         todo!()
     }
 
-    pub fn read_csv(&self, path: &str, label_index: usize) -> (Vec<Vec<f32>>, Vec<Vec<f32>>) {
-        todo!()
+    pub fn read_csv(path: &str, label_index: usize) -> (Vec<Vec<f32>>, Vec<Vec<f32>>) {
+        if !Path::new(path).exists() {
+            panic!("path doesnt exist");
+        }
+        let mut reader = csv::Reader::from_path(path).unwrap();
+        let mut inputs: Vec<Vec<f32>> = Vec::new();
+        let mut labels: Vec<Vec<f32>> = Vec::new();
+        for result in reader.records() {
+            let mut vec: Vec<f32> = result
+                .unwrap()
+                .into_iter()
+                .map(|i| i.parse::<f32>().unwrap())
+                .collect();
+            labels.push(vec![vec.remove(label_index)]);
+            inputs.push(vec);
+        }
+        (inputs, labels)
     }
 
-    pub fn normalize(&self, input: Vec<f32>) -> Vec<f32> {
+    pub fn class_to_label(classes: Vec<Vec<f32>>, classes_num: usize) -> Vec<Vec<f32>> {
+        let mut labels: Vec<Vec<f32>> = Vec::new();
+        for label in 0..classes.len() {
+            let mut vec: Vec<f32> = vec![0.0; classes_num];
+            vec[classes[label][0] as usize] = 1.0;
+            labels.push(vec);
+        }
+        labels
+    }
+
+    pub fn normalize(input: Vec<f32>) -> Vec<f32> {
         let mut min = MAX;
         let mut max = MIN;
         for i in input.iter().copied() {
