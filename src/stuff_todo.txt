@@ -5,6 +5,7 @@ build a simple kernel - elbit course
 physics engine
 unsafe and async rust books
 image manipulation crate
+maybe animate bad apple in the terminal
 
 stuff i should look into:
 Concurrency and parallelism
