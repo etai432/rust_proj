@@ -1,9 +1,8 @@
-finish NN
 json
 rust iter functions
 Create a scripting language using Rust - crafting interpreters book
 build a simple kernel - elbit course
-physic engine
+physics engine
 unsafe and async rust books
 image manipulation crate
 
