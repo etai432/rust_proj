@@ -64,7 +64,6 @@ async fn main() {
         if is_key_pressed(KeyCode::Q) {
             break;
         }
-        clear_background(BLACK);
         draw(&circles);
         update(&mut circles, 0.01);
         // println!("{:?}", circles[0].get_location());
