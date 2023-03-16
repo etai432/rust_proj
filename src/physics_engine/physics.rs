@@ -84,11 +84,14 @@ pub fn collision(circles: &mut Vec<Circle>, indexes: (usize, usize)) {
         - ((circles[indexes.0].position_x - circles[indexes.1].position_x).powf(2.0)
             + (circles[indexes.0].position_y - circles[indexes.1].position_y).powf(2.0))
         .sqrt();
-    let x = d_overlap / (m_overlap + 1.0);
-    let y = x * m_overlap;
+    let mut x = d_overlap / (m_overlap + 1.0);
+    let mut y = x * m_overlap;
+    if !m_overlap.is_finite() {
+        (x, y) = (0.0, d_overlap);
+    }
     println!("{}, {}", x, y);
-    circles[indexes.0].position_y += y;
-    circles[indexes.0].position_x += x;
-    circles[indexes.1].position_y -= y;
-    circles[indexes.1].position_x -= x;
+    circles[indexes.0].position_y += y / 2.0;
+    circles[indexes.0].position_x += x / 2.0;
+    circles[indexes.1].position_y -= y / 2.0;
+    circles[indexes.1].position_x -= x / 2.0;
 }
