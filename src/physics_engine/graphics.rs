@@ -52,14 +52,6 @@ async fn main() {
         50.0,
         false,
     ));
-    circles.push(Circle::new(
-        RED,
-        (800.0, 200.0),
-        (0.2, 0.0),
-        (0.0, 1.0),
-        100.0,
-        false,
-    ));
     loop {
         if is_key_pressed(KeyCode::Q) {
             break;
