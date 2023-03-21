@@ -1,22 +1,21 @@
-use gdk;
 use macroquad::prelude::*;
+use winit::dpi;
 pub struct Circle {
     pub color: Color,
-    pub position_x: f32,
-    pub position_y: f32,
-    pub velocity: (f32, f32),
-    pub acceleration: (f32, f32),
-    pub radius: f32,
+    pub position_x: f64,
+    pub position_y: f64,
+    pub velocity: (f64, f64),
+    pub acceleration: (f64, f64),
+    pub radius: f64,
 }
 
 impl Circle {
     pub fn new(
         color: Color,
-        position: (f32, f32),
-        velocity: (f32, f32),
-        gravity: (f32, f32),
-        radius: f32,
-        exit: bool,
+        position: (f64, f64),
+        velocity: (f64, f64),
+        gravity: (f64, f64),
+        radius: f64,
     ) -> Self {
         Circle {
             color: color,
@@ -27,7 +26,25 @@ impl Circle {
             radius: radius,
         }
     }
-    pub fn update_position(&mut self, dt: f32) {
+    pub fn update_position(&mut self, dt: f64) {
+        self.position_x += self.velocity.0 * dt + 0.5 * self.acceleration.0 * dt * dt;
+        self.position_y += self.velocity.1 * dt + 0.5 * self.acceleration.1 * dt * dt;
+        if self.position_x < self.radius {
+            self.position_x = self.radius * 2.0 - self.position_x;
+            self.velocity.0 *= -1.0;
+        }
+        if self.position_x > screen_width() as f64 - self.radius {
+            self.position_x = (screen_width() as f64 - self.radius) * 2.0 - self.position_x;
+            self.velocity.0 *= -1.0;
+        }
+        if self.position_y < self.radius {
+            self.position_y = self.radius * 2.0 - self.position_y;
+            self.velocity.1 *= -1.0;
+        }
+        if self.position_y > screen_height() as f64 - self.radius {
+            self.position_y = (screen_height() as f64 - self.radius) * 2.0 - self.position_y;
+            self.velocity.1 *= -1.0;
+        }
         self.velocity.0 += self.acceleration.0;
         self.velocity.1 += self.acceleration.1;
     }
@@ -41,3 +58,27 @@ pub fn is_colliding(circle1: &Circle, circle2: &Circle) -> bool {
 }
 
 pub fn collision(circles: &mut Vec<Circle>, indexes: (usize, usize)) {}
+
+pub enum Gravity {
+    Earth,
+    Mars,
+    Moon,
+    Mercury,
+    Venus,
+    Pluto,
+}
+
+impl Gravity {
+    pub fn get_gravity(self) -> f64 {
+        //find screen size
+        match self {
+            Earth => (),
+            Mars => (),
+            Moon => (),
+            Mercury => (),
+            Venus => (),
+            Pluto => (),
+        }
+        return 0.0;
+    }
+}
