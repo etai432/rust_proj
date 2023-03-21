@@ -62,8 +62,12 @@ async fn main() {
                     if ui.button("gravity").clicked() {
                         println!("clicked");
                     }
-                    ui.add(Button::new("hi"));
-                    ui.add(Button::new("hi"));
+                    if ui.button("spawn objects").clicked() {
+                        println!("clicked");
+                    }
+                    if ui.button("color selector").clicked() {
+                        println!("clicked");
+                    }
                 });
         });
         egui_macroquad::draw();
