@@ -64,11 +64,11 @@ async fn main() {
         50.0,
     ));
     let mut menu = 0;
-    let mut spawn = false;
     let mut speed = (0.0, 0.0);
     let mut size = 1.0;
-    let mut color: (u8, u8, u8) = (0, 0, 0);
+    let mut color: (u8, u8, u8) = (255, 255, 255);
     let mut bounciness = 100;
+    let mut gravity1 = Gravity::Earth;
     loop {
         let start = get_time();
         clear_background(BLACK);
@@ -99,23 +99,20 @@ async fn main() {
                     .show(egui_ctx, |ui| {
                         for gravity in Gravity::iter() {
                             if ui.button(format!("{:?}", gravity)).clicked() {
+                                gravity1 = gravity.clone();
                                 change_grav(&mut circles, gravity.get_gravity());
                             }
                         }
                     });
             }
             if menu == 2 {
-                spawn = true;
                 egui::Window::new("press to spawn")
                     .fixed_pos(egui::Pos2::new(150.0, 0.0))
                     .show(egui_ctx, |ui| {
                         ui.add(egui::Slider::new(&mut size, 1.0..=100.0).text("size"));
-                        ui.add(egui::Slider::new(&mut speed.0, -500.0..=500.0).text("speed x"));
-                        ui.add(egui::Slider::new(&mut speed.1, -500.0..=500.0).text("speed y"));
+                        ui.add(egui::Slider::new(&mut speed.0, -1500.0..=1500.0).text("speed x"));
+                        ui.add(egui::Slider::new(&mut speed.1, -1500.0..=1500.0).text("speed y"));
                     });
-                //implement: press to spawn ballz
-            } else {
-                spawn = false;
             }
             if menu == 3 {
                 egui::Window::new("press to spawn")
@@ -148,7 +145,22 @@ async fn main() {
             }
         });
         egui_macroquad::draw();
-        // println!("{}", get_fps());
+        if is_mouse_button_pressed(MouseButton::Left)
+            && (mouse_position().0 > 360.0 || mouse_position().1 > 120.0)
+        {
+            circles.push(Circle::new(
+                Color {
+                    r: color.0 as f32 / 255.0,
+                    g: color.1 as f32 / 255.0,
+                    b: color.2 as f32 / 255.0,
+                    a: 1.0,
+                },
+                (mouse_position().0 as f64, mouse_position().1 as f64),
+                (speed.0, -speed.1),
+                (0.0, gravity1.clone().get_gravity()),
+                size,
+            ))
+        }
         next_frame().await;
         update(&mut circles, get_time() - start);
     }
@@ -159,5 +171,4 @@ pub fn run() {
 }
 
 //TODO:
-//spawn balls by clicking
 //collisions

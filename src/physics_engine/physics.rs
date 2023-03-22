@@ -25,7 +25,7 @@ impl Circle {
             velocity: velocity,
             acceleration: gravity,
             radius: radius,
-            bounciness: 90.0,
+            bounciness: 100.0,
         }
     }
     pub fn update_position(&mut self, dt: f64) {
@@ -61,7 +61,7 @@ pub fn is_colliding(circle1: &Circle, circle2: &Circle) -> bool {
 
 pub fn collision(circles: &mut Vec<Circle>, indexes: (usize, usize)) {}
 
-#[derive(EnumIter, Debug)]
+#[derive(EnumIter, Debug, Clone)]
 pub enum Gravity {
     Earth,
     Moon,
