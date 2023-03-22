@@ -1,15 +1,25 @@
 use crate::physics_engine::physics::{collision, is_colliding, Circle, Gravity};
 use egui::{Color32, Vec2};
 use macroquad::prelude::*;
+use std::env;
 use strum::IntoEnumIterator;
 
 fn window_conf() -> Conf {
-    Conf {
+    let abs_path = env::current_dir().unwrap();
+    if abs_path.to_str().unwrap().chars().next().unwrap() == '/' {
+        return Conf {
+            window_title: "physics engine".to_owned(),
+            fullscreen: true,
+            window_resizable: true,
+            ..Default::default()
+        };
+    }
+    return Conf {
         window_title: "physics engine".to_owned(),
         fullscreen: true,
         window_resizable: false,
         ..Default::default()
-    }
+    };
 }
 
 fn draw(circles: &Vec<Circle>) {
