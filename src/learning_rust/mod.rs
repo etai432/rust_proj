@@ -1,4 +1,5 @@
 pub mod concurrency;
+pub mod file_renamer;
 pub mod iterators;
 pub mod leetcode;
 pub mod macros;
