@@ -145,8 +145,11 @@ async fn main() {
             }
         });
         egui_macroquad::draw();
-        if is_mouse_button_pressed(MouseButton::Left)
-            && (mouse_position().0 > 360.0 || mouse_position().1 > 120.0)
+        if (is_mouse_button_pressed(MouseButton::Left)
+            && menu != 1
+            && (mouse_position().0 > 360.0 || mouse_position().1 > 120.0))
+            || (is_mouse_button_pressed(MouseButton::Left)
+                && (mouse_position().0 > 360.0 || mouse_position().1 > 200.0))
         {
             circles.push(Circle::new(
                 Color {

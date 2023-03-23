@@ -29,8 +29,8 @@ impl Circle {
         }
     }
     pub fn update_position(&mut self, dt: f64) {
-        self.position_x += self.velocity.0 * dt + 0.5 * self.acceleration.0 * dt * dt;
-        self.position_y += self.velocity.1 * dt + 0.5 * self.acceleration.1 * dt * dt;
+        self.position_x += self.velocity.0 * dt;
+        self.position_y += self.velocity.1 * dt;
         if self.position_x < self.radius {
             self.position_x = self.radius * 2.0 - self.position_x;
             self.velocity.0 *= -1.0 * self.bounciness / 100.0;
