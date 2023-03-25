@@ -51,7 +51,9 @@ fn change_bounciness(circles: &mut Vec<Circle>, bounciness: f64) {
     }
 }
 
-fn collisions(circles: &mut Vec<Circle>) {}
+fn collisions(circles: &mut Vec<Circle>) {
+    todo!();
+}
 
 #[macroquad::main(window_conf)]
 async fn main() {
