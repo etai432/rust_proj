@@ -52,7 +52,13 @@ fn change_bounciness(circles: &mut Vec<Circle>, bounciness: f64) {
 }
 
 fn collisions(circles: &mut Vec<Circle>) {
-    todo!();
+    for i in 0..circles.len() {
+        for j in 0..circles.len() {
+            if i != j && is_colliding(&circles[i], &circles[j]) {
+                collision(circles, (i, j));
+            }
+        }
+    }
 }
 
 #[macroquad::main(window_conf)]
@@ -166,7 +172,9 @@ async fn main() {
                 size,
             ))
         }
+        println!("{}", circles.len());
         next_frame().await;
+        collisions(&mut circles);
         update(&mut circles, get_time() - start);
     }
 }
