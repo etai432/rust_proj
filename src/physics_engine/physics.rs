@@ -87,12 +87,12 @@ pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
 
     // Resolve any interpenetration
     let penetration_depth = radii_sum - distance;
-    let penetration_normal_x = -normal_x;
-    let penetration_normal_y = -normal_y;
-    circles[ind.0].position_x += penetration_normal_x * penetration_depth / 2.0;
-    circles[ind.0].position_y += penetration_normal_y * penetration_depth / 2.0;
-    circles[ind.1].position_x += penetration_normal_x * penetration_depth / 2.0;
-    circles[ind.1].position_y += penetration_normal_y * penetration_depth / 2.0;
+    let penetration_normal_x = -normal_x * penetration_depth / distance;
+    let penetration_normal_y = -normal_y * penetration_depth / distance;
+    circles[ind.0].position_x += penetration_normal_x * penetration_depth / radii_sum;
+    circles[ind.0].position_y += penetration_normal_y * penetration_depth / radii_sum;
+    circles[ind.1].position_x += penetration_normal_x * penetration_depth / radii_sum;
+    circles[ind.1].position_y += penetration_normal_y * penetration_depth / radii_sum;
 
     // Update the physics simulation
     circles[ind.0].position_x += circles[ind.0].velocity.0;
