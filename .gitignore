@@ -1,4 +1,1 @@
 target/
-target/debug/
-src/neural_network/mnist_test.csv
-src/neural_network/mnist_train.csv
