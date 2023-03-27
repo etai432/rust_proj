@@ -53,10 +53,10 @@ fn change_bounciness(circles: &mut Vec<Circle>, bounciness: f64) {
 
 fn collisions(circles: &mut Vec<Circle>) {
     for i in 0..circles.len() {
-        for j in 0..circles.len() {
-            if i != j && is_colliding(&circles[i], &circles[j]) {
-                collision(circles, (i, j));
-            }
+        for j in i + 1..circles.len() {
+            // if i != j && is_colliding(&circles[i], &circles[j]) {
+            collision(circles, (i, j));
+            // }
         }
     }
 }
@@ -64,13 +64,6 @@ fn collisions(circles: &mut Vec<Circle>) {
 #[macroquad::main(window_conf)]
 async fn main() {
     let mut circles: Vec<Circle> = Vec::new();
-    circles.push(Circle::new(
-        WHITE,
-        (500.0, 200.0),
-        (500.0, 0.0),
-        (0.0, 4000.0),
-        50.0,
-    ));
     let mut menu = 0;
     let mut speed = (0.0, 0.0);
     let mut size = 1.0;
@@ -117,7 +110,7 @@ async fn main() {
                 egui::Window::new("press to spawn")
                     .fixed_pos(egui::Pos2::new(150.0, 0.0))
                     .show(egui_ctx, |ui| {
-                        ui.add(egui::Slider::new(&mut size, 1.0..=100.0).text("size"));
+                        ui.add(egui::Slider::new(&mut size, 1.0..=50.0).text("size"));
                         ui.add(egui::Slider::new(&mut speed.0, -1500.0..=1500.0).text("speed x"));
                         ui.add(egui::Slider::new(&mut speed.1, -1500.0..=1500.0).text("speed y"));
                     });

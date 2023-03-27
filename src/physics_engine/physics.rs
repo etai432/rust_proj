@@ -80,25 +80,32 @@ pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
         / (circles[ind.0].mass + circles[ind.1].mass);
 
     // Apply the collision impulse
-    circles[ind.0].velocity.0 += impulse_magnitude * normal_x / circles[ind.0].mass;
-    circles[ind.0].velocity.1 += impulse_magnitude * normal_y / circles[ind.0].mass;
-    circles[ind.1].velocity.0 -= impulse_magnitude * normal_x / circles[ind.1].mass;
-    circles[ind.1].velocity.1 -= impulse_magnitude * normal_y / circles[ind.1].mass;
+    circles[ind.0].velocity.0 += impulse_magnitude * normal_x / circles[ind.0].mass
+        * (circles[ind.0].bounciness / 100.0).sqrt();
+    circles[ind.0].velocity.1 += impulse_magnitude * normal_y / circles[ind.0].mass
+        * (circles[ind.0].bounciness / 100.0).sqrt();
+    circles[ind.1].velocity.0 -= impulse_magnitude * normal_x / circles[ind.1].mass
+        * (circles[ind.1].bounciness / 100.0).sqrt();
+    circles[ind.1].velocity.1 -= impulse_magnitude * normal_y / circles[ind.1].mass
+        * (circles[ind.1].bounciness / 100.0).sqrt();
 
-    // Resolve any interpenetration
-    let penetration_depth = radii_sum - distance;
-    let penetration_normal_x = -normal_x * penetration_depth / distance;
-    let penetration_normal_y = -normal_y * penetration_depth / distance;
-    circles[ind.0].position_x += penetration_normal_x * penetration_depth / radii_sum;
-    circles[ind.0].position_y += penetration_normal_y * penetration_depth / radii_sum;
-    circles[ind.1].position_x += penetration_normal_x * penetration_depth / radii_sum;
-    circles[ind.1].position_y += penetration_normal_y * penetration_depth / radii_sum;
+    let m_overlap = (circles[ind.0].position_y - circles[ind.1].position_y)
+        / (circles[ind.0].position_x - circles[ind.1].position_x);
+    let d_overlap = circles[ind.0].radius + circles[ind.1].radius
+        - ((circles[ind.0].position_x - circles[ind.1].position_x).powf(2.0)
+            + (circles[ind.0].position_y - circles[ind.1].position_y).powf(2.0))
+        .sqrt();
+    let x = d_overlap / (m_overlap + 1.0);
+    let y = x * m_overlap;
+    circles[ind.0].position_y += y;
+    circles[ind.0].position_x += x;
+    circles[ind.1].position_y -= y;
+    circles[ind.1].position_x -= x;
 
-    // Update the physics simulation
-    circles[ind.0].position_x += circles[ind.0].velocity.0;
-    circles[ind.0].position_y += circles[ind.0].velocity.1;
-    circles[ind.1].position_x += circles[ind.1].velocity.0;
-    circles[ind.1].position_y += circles[ind.1].velocity.1;
+    // circles[ind.0].position_x += circles[ind.0].velocity.0;
+    // circles[ind.0].position_y += circles[ind.0].velocity.1;
+    // circles[ind.1].position_x += circles[ind.1].velocity.0;
+    // circles[ind.1].position_y += circles[ind.1].velocity.1;
 }
 
 #[derive(EnumIter, Debug, Clone)]
