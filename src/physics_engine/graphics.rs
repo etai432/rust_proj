@@ -1,4 +1,4 @@
-use crate::physics_engine::physics::{collision, is_colliding, Circle, Gravity};
+use crate::physics_engine::physics::{collision, Circle, Gravity};
 use egui::{Color32, Vec2};
 use macroquad::prelude::*;
 use std::env;

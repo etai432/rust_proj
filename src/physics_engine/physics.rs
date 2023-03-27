@@ -54,13 +54,6 @@ impl Circle {
     }
 }
 
-pub fn is_colliding(circle1: &Circle, circle2: &Circle) -> bool {
-    ((circle1.position_x - circle2.position_x).powf(2.0)
-        + (circle1.position_y - circle2.position_y).powf(2.0))
-    .sqrt()
-        <= circle1.radius + circle2.radius
-}
-
 pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
     let distance = ((circles[ind.0].position_x - circles[ind.1].position_x).powf(2.0)
         + (circles[ind.0].position_y - circles[ind.1].position_y).powf(2.0))
@@ -72,14 +65,12 @@ pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
     let normal_x = (circles[ind.1].position_x - circles[ind.0].position_x) / distance;
     let normal_y = (circles[ind.1].position_y - circles[ind.0].position_y) / distance;
 
-    // Calculate the collision impulse
     let relative_velocity_x = circles[ind.1].velocity.0 - circles[ind.0].velocity.0;
     let relative_velocity_y = circles[ind.1].velocity.1 - circles[ind.0].velocity.1;
     let dot_product = relative_velocity_x * normal_x + relative_velocity_y * normal_y;
     let impulse_magnitude = dot_product * (2.0 * circles[ind.0].mass * circles[ind.1].mass)
         / (circles[ind.0].mass + circles[ind.1].mass);
 
-    // Apply the collision impulse
     circles[ind.0].velocity.0 += impulse_magnitude * normal_x / circles[ind.0].mass
         * (circles[ind.0].bounciness / 100.0).sqrt();
     circles[ind.0].velocity.1 += impulse_magnitude * normal_y / circles[ind.0].mass
@@ -101,11 +92,6 @@ pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
     circles[ind.0].position_x += x;
     circles[ind.1].position_y -= y;
     circles[ind.1].position_x -= x;
-
-    // circles[ind.0].position_x += circles[ind.0].velocity.0;
-    // circles[ind.0].position_y += circles[ind.0].velocity.1;
-    // circles[ind.1].position_x += circles[ind.1].velocity.0;
-    // circles[ind.1].position_y += circles[ind.1].velocity.1;
 }
 
 #[derive(EnumIter, Debug, Clone)]
