@@ -110,7 +110,7 @@ async fn main() {
                 egui::Window::new("press to spawn")
                     .fixed_pos(egui::Pos2::new(150.0, 0.0))
                     .show(egui_ctx, |ui| {
-                        ui.add(egui::Slider::new(&mut size, 1.0..=50.0).text("size"));
+                        ui.add(egui::Slider::new(&mut size, 10.0..=50.0).text("size"));
                         ui.add(egui::Slider::new(&mut speed.0, -1500.0..=1500.0).text("speed x"));
                         ui.add(egui::Slider::new(&mut speed.1, -1500.0..=1500.0).text("speed y"));
                     });
@@ -174,6 +174,3 @@ async fn main() {
 pub fn run() {
     main();
 }
-
-//TODO:
-//collisions
