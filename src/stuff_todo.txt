@@ -14,4 +14,3 @@ Advanced data structures
 Low-level System Programming
 Testing
 cli todo app using sqlite and clap
-test
