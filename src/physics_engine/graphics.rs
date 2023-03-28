@@ -53,8 +53,10 @@ fn change_bounciness(circles: &mut Vec<Circle>, bounciness: f64) {
 
 fn collisions(circles: &mut Vec<Circle>) {
     for i in 0..circles.len() {
-        for j in i + 1..circles.len() {
-            collision(circles, (i, j));
+        for j in 0..circles.len() {
+            if i != j {
+                collision(circles, (i, j));
+            }
         }
     }
 }
