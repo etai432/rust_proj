@@ -1,6 +1,6 @@
 1. cli todo app using sqlite and clap
-2. build a simple kernel - elbit course
-3. Create a scripting language using Rust - crafting interpreters book
+2. Create a scripting language using Rust - crafting interpreters book
+3. build a simple kernel - elbit course
 ? paint app
 ? maybe animate bad apple in the terminal (need a rly cool idea)
 
