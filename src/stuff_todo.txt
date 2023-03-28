@@ -1,16 +1,14 @@
-json
-rust iter functions
-Create a scripting language using Rust - crafting interpreters book
-build a simple kernel - elbit course
-physics engine
-unsafe and async rust books
-image manipulation crate
-maybe animate bad apple in the terminal
+1. cli todo app using sqlite and clap
+2. build a simple kernel - elbit course
+3. Create a scripting language using Rust - crafting interpreters book
+? paint app
+? maybe animate bad apple in the terminal (need a rly cool idea)
+
 
 stuff i should look into:
-Concurrency and parallelism
-Unsafe code and FFI
-Advanced data structures
-Low-level System Programming
 Testing
-cli todo app using sqlite and clap
+json
+rust iter functions
+Concurrency and parallelism
+Low-level System Programming
+unsafe and async rust books
