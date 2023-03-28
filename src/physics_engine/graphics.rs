@@ -64,7 +64,7 @@ async fn main() {
     let mut circles: Vec<Circle> = Vec::new();
     let mut menu = 0;
     let mut speed = (0.0, 0.0);
-    let mut size = 1.0;
+    let mut size = 25.0;
     let mut color: (u8, u8, u8) = (255, 255, 255);
     let mut bounciness = 100;
     let mut gravity1 = Gravity::Earth;
