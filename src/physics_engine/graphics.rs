@@ -163,7 +163,6 @@ async fn main() {
                 size,
             ))
         }
-        // println!("{}", circles.len());
         next_frame().await;
         collisions(&mut circles);
         update(&mut circles, get_time() - start);
