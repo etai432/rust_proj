@@ -20,12 +20,12 @@ impl Circle {
         radius: f64,
     ) -> Self {
         Circle {
-            color: color,
+            color,
             position_x: position.0,
             position_y: position.1,
-            velocity: velocity,
+            velocity,
             acceleration: gravity,
-            radius: radius,
+            radius,
             bounciness: 100.0,
             mass: radius * radius,
         }
@@ -54,7 +54,7 @@ impl Circle {
     }
 }
 
-pub fn collision(circles: &mut Vec<Circle>, ind: (usize, usize)) {
+pub fn collision(circles: &mut [Circle], ind: (usize, usize)) {
     let distance = ((circles[ind.0].position_x - circles[ind.1].position_x).powf(2.0)
         + (circles[ind.0].position_y - circles[ind.1].position_y).powf(2.0))
     .sqrt();
@@ -117,7 +117,7 @@ impl Gravity {
             Gravity::Venus => 3616.71763507,
             Gravity::Pluto => 252.803261978,
             Gravity::Sun => 111722.731906,
-            _ => 0.0,
+            Gravity::None => 0.0,
         }
     }
 }

@@ -5,8 +5,12 @@ use std::env;
 use strum::IntoEnumIterator;
 
 fn window_conf() -> Conf {
-    let abs_path = env::current_dir().unwrap();
-    if abs_path.to_str().unwrap().chars().next().unwrap() == '/' {
+    if env::current_dir()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .starts_with('/')
+    {
         return Conf {
             window_title: "physics engine".to_owned(),
             fullscreen: true,
@@ -14,44 +18,44 @@ fn window_conf() -> Conf {
             ..Default::default()
         };
     }
-    return Conf {
+    Conf {
         window_title: "physics engine".to_owned(),
         fullscreen: true,
         window_resizable: false,
         ..Default::default()
-    };
+    }
 }
 
-fn draw(circles: &Vec<Circle>) {
-    for circle in circles.into_iter() {
+fn draw(circles: &[Circle]) {
+    for circle in circles.iter() {
         draw_circle(
             circle.position_x as f32,
             circle.position_y as f32,
             circle.radius as f32,
             circle.color,
-        )
+        );
     }
 }
 
-fn update(shapes: &mut Vec<Circle>, dt: f64) {
+fn update(shapes: &mut [Circle], dt: f64) {
     for circle in shapes.iter_mut() {
         circle.update_position(dt);
     }
 }
 
-fn change_grav(circles: &mut Vec<Circle>, grav: f64) {
+fn change_grav(circles: &mut [Circle], grav: f64) {
     for circle in circles.iter_mut() {
         circle.acceleration = (0.0, grav);
     }
 }
 
-fn change_bounciness(circles: &mut Vec<Circle>, bounciness: f64) {
+fn change_bounciness(circles: &mut [Circle], bounciness: f64) {
     for circle in circles.iter_mut() {
         circle.bounciness = bounciness;
     }
 }
 
-fn collisions(circles: &mut Vec<Circle>) {
+fn collisions(circles: &mut [Circle]) {
     for i in 0..circles.len() {
         for j in 0..circles.len() {
             if i != j {
