@@ -891,7 +891,7 @@ pub fn gen_moves(
     for i in remove.into_iter().rev() {
         moves.remove(i);
     }
-    return moves;
+    moves
 }
 
 pub fn get_mouse_pos() -> usize {
@@ -1041,28 +1041,18 @@ pub fn draw_move(moves: Vec<usize>, board_arr: &Vec<i32>) {
                 },
             );
         } else {
-            if board_arr[i] == -1 || board_arr[i] == 1 {
-                draw_circle_lines(
-                    50.0 + (i % 8 * 100) as f32,
-                    50.0 + (i / 8 * 100) as f32,
-                    49.0,
-                    7.0,
-                    RED,
-                );
-            } else {
-                draw_circle_lines(
-                    50.0 + (i % 8 * 100) as f32,
-                    50.0 + (i / 8 * 100) as f32,
-                    49.0,
-                    7.0,
-                    Color {
-                        r: 0.4,
-                        g: 0.4,
-                        b: 0.4,
-                        a: 0.5,
-                    },
-                );
-            }
+            draw_circle_lines(
+                50.0 + (i % 8 * 100) as f32,
+                50.0 + (i / 8 * 100) as f32,
+                49.0,
+                7.0,
+                Color {
+                    r: 0.4,
+                    g: 0.4,
+                    b: 0.4,
+                    a: 0.5,
+                },
+            );
         }
     }
 }
