@@ -1,15 +1,14 @@
-1. cli todo app using sqlite and clap
-2. put my shit on the web
-3. Create a scripting language using Rust - crafting interpreters book
+1. cli todo app using sqlite and clap- dont wanna anymore >:(
+2. put my shit on the web- i dont like web >:(
+3. Create a scripting language using Rust - crafting interpreters book- KLANG ON TOP
 4. build a simple kernel - elbit course
-? paint app
-? maybe animate bad apple in the terminal (need a rly cool idea)
+? paint app <- epic painter moment
 
 
 stuff i should look into:
-Testing
-json
-rust iter functions
-Concurrency and parallelism
-Low-level System Programming
-unsafe and async rust books
+Testing <- nah im good
+json <- never again
+rust iter functions <- kinda know already
+Concurrency and parallelism <- gay
+Low-level System Programming <- epic
+unsafe and async rust books <- gay
